@@ -46,7 +46,7 @@ namespace sones.GraphDS.Services.RESTService
             _pluginManager
                 .Register<IOInterface>(IOInterfaceCompatibility.MinVersion, IOInterfaceCompatibility.MaxVersion);
               
-            _pluginManager.Discover();
+            _pluginManager.DiscoverAllPlugins();
 
             #endregion
 

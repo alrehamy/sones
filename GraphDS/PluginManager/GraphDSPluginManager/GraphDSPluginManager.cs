@@ -47,10 +47,9 @@ namespace sones.GraphDS.PluginManager.GraphDSPluginManager
             _pluginManager
                 .Register<IGraphQL>(IGraphQLVersionCompatibility.MinVersion, IGraphQLVersionCompatibility.MaxVersion)
                 .Register<IDrainPipe>(IDrainPipeCompatibility.MinVersion, IDrainPipeCompatibility.MaxVersion)
-                .Register<IUsageDataCollector>(IUsageDataCompatibility.MinVersion,IUsageDataCompatibility.MaxVersion)
-                .Register<IService>(IServiceCompatibility.MinVersion, IServiceCompatibility.MaxVersion);
+                .Register<IUsageDataCollector>(IUsageDataCompatibility.MinVersion, IUsageDataCompatibility.MaxVersion);
 
-            _pluginManager.Discover();
+            _pluginManager.DiscoverAllPlugins();
 
             #endregion
 
@@ -60,7 +59,6 @@ namespace sones.GraphDS.PluginManager.GraphDSPluginManager
 
             FillLookup<IGraphQL>(componentName, _ => _.PluginName);
             FillLookup<IDrainPipe>(componentName, _ => _.PluginName);
-            FillLookup<IService>(componentName, _ => _.PluginName);
             FillLookup<IUsageDataCollector>(componentName, _ => _.PluginName);
 
             #endregion   

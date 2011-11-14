@@ -40,6 +40,7 @@ using sones.Plugins.GraphDS.Services;
 using sones.GraphDS;
 using sones.Plugins.GraphDS;
 using sones.GraphDS.UDC;
+using System.Text;
 
 namespace sones.GraphDSServer
 {
@@ -214,32 +215,40 @@ namespace sones.GraphDSServer
 
         public void StartService(String myServiceName, IDictionary<string, object> myParameter)
         {
-            IService Service = null;
-
-            if (!_graphDSServices.TryGetValue(myServiceName, out Service))
+            if (_graphDSServices.ContainsKey(myServiceName))
             {
-                try
-                {
-                    IGraphDS GraphDS = this as IGraphDS;
-                    Dictionary<string, object> Parameter = new Dictionary<string, object>();
-                    Parameter.Add("GraphDS", GraphDS);
-                    Service = _pluginManager.GetAndInitializePlugin<IService>(myServiceName, Parameter);
-                }
-                catch (Exception Ex)
-                {
-                    throw new ServiceException("An error occured when trying to initialize " + myServiceName + "!" + Environment.NewLine + "See inner exception for details.", Ex);
-                }
-                _graphDSServices.Add(Service.PluginName, Service);
+                throw new ServiceException("The service " + myServiceName + " has already been startet!");
             }
+
+            var foundServices = _pluginManager.Hotplug<IService>(IServiceCompatibility.MinVersion, IServiceCompatibility.MaxVersion).ToList();
+
+            if (foundServices.Count() == 0)
+            {
+                throw new ServiceException("The service " + myServiceName + " has not been found!");
+            }
+
+            var interestingServices = foundServices.Where(_ => _.PluginName == myServiceName);
+
+            if (interestingServices.Count() > 1)
+            {
+                throw new ServiceException("The service " + myServiceName + " has not been more than one time!");
+            }
+
+            IService interestingService = interestingServices.First();
             try
             {
-                Service.Start(myParameter);
+                var result = (IService)interestingService.InitializePlugin(myServiceName, new Dictionary<string, object> { { "GraphDS", (IGraphDS)this } });
+
+                interestingService = result;
+
+                interestingService.Start(myParameter);
             }
-            catch (Exception Ex)
+            catch (Exception e)
             {
-                throw new ServiceException("An error occured when trying to start " + myServiceName + "!" + Environment.NewLine + "See inner exception for details.", Ex);
+                throw new ServiceException("An error occured when trying to start " + myServiceName + "!" + Environment.NewLine + "See inner exception for details.", e);
             }
 
+            _graphDSServices.Add(myServiceName, interestingService);
         }
 
         #endregion
@@ -260,6 +269,7 @@ namespace sones.GraphDSServer
                     throw new ServiceException("An error occured when trying to stop " + myServiceName + "!", Ex);
                 }
 
+                _graphDSServices.Remove(myServiceName);
             }
             else
             {

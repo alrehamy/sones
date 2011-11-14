@@ -85,7 +85,7 @@ namespace sones.GraphQL.GQL.Manager.Plugin
 
             #endregion
 
-            _pluginManager.Discover();
+            _pluginManager.DiscoverAllPlugins();
 
             #endregion
 

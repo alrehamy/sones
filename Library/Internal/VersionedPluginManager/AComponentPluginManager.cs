@@ -141,6 +141,17 @@ namespace sones.Library.VersionedPluginManager
             }
         }
 
+        public IEnumerable<T> Hotplug<T>(Version version, Version version_2)
+        {
+            var result = new List<T>();
+
+            _pluginManager.Register<T>(version, version_2);
+
+            _pluginManager.Discover<T>();
+
+            return _pluginManager.GetPlugins<T>();
+        }
+
         /// <summary>
         /// Returns the plugin as IPluginable instance.
         /// </summary>

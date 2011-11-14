@@ -55,7 +55,7 @@ namespace sones.GraphDB.Manager.Plugin
                 .Register<ISonesVersionedIndex>(ISonesIndexVersionCompatibility.MinVersion, ISonesIndexVersionCompatibility.MaxVersion)
                 .Register<AUserdefinedDataType>(ISonesIndexVersionCompatibility.MinVersion, ISonesIndexVersionCompatibility.MaxVersion);
 
-            _pluginManager.Discover();
+            _pluginManager.DiscoverAllPlugins();
 
             #endregion
 

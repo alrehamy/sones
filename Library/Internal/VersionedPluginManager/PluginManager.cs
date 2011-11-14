@@ -122,10 +122,7 @@ namespace sones.Library.VersionedPluginManager
         public PluginManager Register<T1>(Version myMinVersion, Version myMaxVersion = null,
                                           Func<Type, Object> myActivateDelegate = null, params Object[] myCtorArgs)
         {
-            if (_inheritTypeAndInstance.ContainsKey(typeof (T1)))
-            {
-                throw new Exception("Duplicate activator type '" + typeof (T1).Name + "'");
-            }
+            _inheritTypeAndInstance.Remove(typeof(T1));
 
             var activatorInfo = new ActivatorInfo
                                     {
@@ -186,21 +183,263 @@ namespace sones.Library.VersionedPluginManager
         /// All newly registered types need to be activated again!
         /// </summary>
         /// <returns></returns>
-        public void Discover(Boolean myThrowExceptionOnIncompatibleVersion = true, Boolean myPublicOnly = true)
+        public void DiscoverAllPlugins(Boolean myThrowExceptionOnIncompatibleVersion = true, Boolean myPublicOnly = true)
         {
-            #region Clean up old plugins
-
-            foreach (var kv in _inheritTypeAndInstance)
+            lock (_inheritTypeAndInstance)
             {
-                _inheritTypeAndInstance[kv.Key].Item2.Clear();
+                #region Clean up old plugins
+
+                foreach (var kv in _inheritTypeAndInstance)
+                {
+                    _inheritTypeAndInstance[kv.Key].Item2.Clear();
+                }
+
+                #endregion
+
+                foreach (string folder in _lookupLocations)
+                {
+                    DiscoverPath(myThrowExceptionOnIncompatibleVersion, myPublicOnly, folder);
+                }
+            }
+        }
+
+        public void Discover<T>(Boolean myThrowExceptionOnIncompatibleVersion = true, Boolean myPublicOnly = true)
+        {
+            lock (_inheritTypeAndInstance)
+            {
+                #region Clean up old plugins
+
+                var type = typeof(T);
+
+                if (_inheritTypeAndInstance.ContainsKey(type))
+                {
+                    _inheritTypeAndInstance[type].Item2.Clear();
+                }
+               
+                #endregion
+
+                foreach (string folder in _lookupLocations)
+                {
+                    DiscoverPath<T>(myThrowExceptionOnIncompatibleVersion, myPublicOnly, folder);
+                }
+            }
+        }
+
+        private void DiscoverPath<T>(Boolean myThrowExceptionOnIncompatibleVersion, Boolean myPublicOnly, String myPath)
+        {
+            #region Get all files in the _LookupLocations
+
+            if (!Directory.Exists(myPath)) return;
+
+            IEnumerable<string> files = Directory.EnumerateFiles(myPath, "*.dll")
+                .Union(Directory.EnumerateFiles(myPath, "*.exe"));
+
+            #endregion
+
+            foreach (string file in files)
+            {
+                DiscoverFile<T>(myThrowExceptionOnIncompatibleVersion, myPublicOnly, file);
+            }
+        }
+
+        private void DiscoverFile<T>(Boolean myThrowExceptionOnIncompatibleVersion, Boolean myPublicOnly, String myFile)
+        {
+            Assembly loadedPluginAssembly;
+
+            #region Try to load assembly from the filename
+
+            #region Load assembly
+
+            try
+            {
+                loadedPluginAssembly = Assembly.LoadFrom(myFile);
+            }
+            catch (Exception e)
+            {
+                throw new CouldNotLoadAssemblyException(myFile, e);
             }
 
             #endregion
 
-            foreach (string folder in _lookupLocations)
-            {                
-                DiscoverPath(myThrowExceptionOnIncompatibleVersion, myPublicOnly, folder);
+            #region Check all types of the assembly - this might throw a ReflectionTypeLoadException if the plugin definition does no longer match the plugin implementation
+
+            try
+            {
+                if (loadedPluginAssembly.GetTypes().IsNullOrEmpty())
+                {
+                    return;
+                }
             }
+            catch (ReflectionTypeLoadException)
+            {
+                #region Do we have a conflict of an plugin implementation?
+
+                // Check all referenced assembly of this failed loadedPluginAssembly.GetTypes() and find all matching assemblies with 
+                // all types in _InheritTypeAndInstance
+
+                //TODO: check more than only one reference depth...
+
+                //var matchingAssemblies = new List<Tuple<AssemblyName, AssemblyName>>();
+                foreach (AssemblyName assembly in loadedPluginAssembly.GetReferencedAssemblies())
+                {
+                    IEnumerable<KeyValuePair<Type, Tuple<ActivatorInfo, List<object>>>> matchings =
+                        _inheritTypeAndInstance.Where(kv => Assembly.GetAssembly(kv.Key).GetName().Name == assembly.Name);
+
+                    if (matchings != null)
+                    {
+                        foreach (var matchAss in matchings)
+                        {
+                            //matchingAssemblies.Add(new Tuple<AssemblyName, AssemblyName>(Assembly.GetAssembly(matchAss.Key).GetName(), assembly));
+
+                            CheckVersion(myThrowExceptionOnIncompatibleVersion, loadedPluginAssembly,
+                                         Assembly.GetAssembly(matchAss.Key).GetName(), assembly, matchAss.Value.Item1);
+                        }
+                    }
+                }
+
+                #endregion
+            }
+
+            #endregion
+
+            #endregion
+
+            #region Get all types of the assembly
+
+            try
+            {
+                foreach (Type type in loadedPluginAssembly.GetTypes())
+                {
+                    #region Type validation
+
+                    if (!type.IsClass || type.IsAbstract)
+                    {
+                        continue;
+                    }
+
+                    if (!type.IsPublic && myPublicOnly)
+                    {
+                        continue;
+                    }
+
+                    #region Skip _Accessor classes
+
+                    if (type.HasBaseType("Microsoft.VisualStudio.TestTools.UnitTesting.BaseShadow"))
+                    {
+                        continue;
+                    }
+
+                    #endregion
+
+                    //The plugin has to implement IPluginable so that we are able to initialize/distinguish them
+                    if (!typeof(IPluginable).IsInterfaceOf(type))
+                    {
+                        continue;
+                    }
+
+                    //The plugin has to have an empty constructor
+                    if (type.GetConstructor(Type.EmptyTypes) == null)
+                    {
+                        continue;
+                    }
+                    #endregion
+
+                    FindAndActivateType<T>(myThrowExceptionOnIncompatibleVersion, loadedPluginAssembly, type);
+                }
+            }
+            catch
+            {
+                //if we can't load a dll, so we drop this
+            }
+
+            #endregion
+        }
+
+        /// <summary>
+        /// Will seach all registered type whether it is an plugin definition of <paramref name="myCurrentPluginType"/>.
+        /// </summary>
+        /// <param name="myThrowExceptionOnIncompatibleVersion">Truth value of throw an exception</param>
+        /// <param name="myLoadedPluginAssembly">The assembly from which the <paramref name="myCurrentPluginType"/> comes from.</param>
+        /// <param name="myCurrentPluginType">The current plugin (or not).</param>
+        private void FindAndActivateType<T>(bool myThrowExceptionOnIncompatibleVersion, Assembly myLoadedPluginAssembly,
+                                          Type myCurrentPluginType)
+        {
+
+            var interestingType = typeof(T);
+
+            var validBaseTypes =
+                _inheritTypeAndInstance
+                .Where(_ => _.Key == interestingType)
+                .Where(kv =>
+                {
+                    Type realType = DeGenerification(kv.Key, myCurrentPluginType);
+                    return kv.Key.IsBaseType(realType) || kv.Key.IsInterfaceOf(realType);
+                }
+            );
+
+            #region Take each baseType which is valid (either base or interface) and verify version and add
+
+            foreach (var baseType in validBaseTypes)
+            {
+                ActivatorInfo activatorInfo = _inheritTypeAndInstance[baseType.Key].Item1;
+
+                #region Get baseTypeAssembly and plugin referenced assembly
+
+                AssemblyName baseTypeAssembly = Assembly.GetAssembly(baseType.Key).GetName();
+                AssemblyName pluginReferencedAssembly = myLoadedPluginAssembly.GetReferencedAssembly(baseTypeAssembly.Name);
+
+                #endregion
+
+                Boolean _validVersion = false;
+
+                try
+                {
+                    if (CheckVersion(myThrowExceptionOnIncompatibleVersion, myLoadedPluginAssembly, baseTypeAssembly, pluginReferencedAssembly, activatorInfo))
+                        _validVersion = true;
+                }
+
+                catch (Exception)
+                {
+                    continue;
+                }
+
+                #region Create instance and add to lookup dict
+
+                if (_validVersion)
+                {
+                    try
+                    {
+                        Object instance;
+                        Type realType = DeGenerification(baseType.Key, myCurrentPluginType);
+                        if (activatorInfo.ActivateDelegate != null)
+                        {
+                            instance = activatorInfo.ActivateDelegate(realType);
+                        }
+                        else
+                        {
+                            instance = Activator.CreateInstance(realType, activatorInfo.CtorArgs);
+                        }
+
+                        if (instance != null)
+                        {
+                            _inheritTypeAndInstance[baseType.Key].Item2.Add(instance);
+
+                            if (OnPluginFound != null)
+                            {
+                                OnPluginFound(this, new PluginFoundEventArgs(myCurrentPluginType, instance));
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        throw new UnknownException(e);
+                    }
+                }
+
+                #endregion
+            }
+
+            #endregion
         }
 
         private void DiscoverPath(Boolean myThrowExceptionOnIncompatibleVersion, Boolean myPublicOnly, String myPath)
