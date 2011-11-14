@@ -109,7 +109,7 @@ namespace TagExampleWithGraphMappingFramework
             Dictionary<string, object> RemoteAPIParameter = new Dictionary<string, object>();
             RemoteAPIParameter.Add("IPAddress", IPAddress.Parse("127.0.0.1"));
             RemoteAPIParameter.Add("Port", (ushort)9970);
-            RemoteAPIParameter.Add("IsSecure", true);
+            RemoteAPIParameter.Add("IsSecure", false);
             _dsServer.StartService("sones.RemoteAPIService", RemoteAPIParameter);
             #endregion
 
@@ -203,7 +203,7 @@ namespace TagExampleWithGraphMappingFramework
         public void Run()
         {
             
-            GraphDSClient = new GraphDS_RemoteClient(new Uri("https://localhost:9970/rpc"), true);
+            GraphDSClient = new GraphDS_RemoteClient(new Uri("http://localhost:9970/rpc"), false);
             SecToken = GraphDSClient.LogOn(new RemoteUserPasswordCredentials("test", "test"));
             TransToken = GraphDSClient.BeginTransaction(SecToken);
 
