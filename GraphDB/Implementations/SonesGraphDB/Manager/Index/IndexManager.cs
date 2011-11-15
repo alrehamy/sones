@@ -415,7 +415,7 @@ namespace sones.GraphDB.Manager.Index
                     {
                         foreach (var index in indexGroup.Value)
                         {
-                            index.Add(vertex);
+                            index.Add(CreateIndexKey(indexGroup.Key, vertex), vertex.VertexID);
                         }
                     }
                 }
