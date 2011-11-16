@@ -57,7 +57,7 @@ namespace sones.GraphDS.Services.RemoteAPIService.ServiceContracts.VertexInstanc
         /// <param name="myFilter">A function to filter those incoming edges (VertexTypeID, EdgeID, ISingleEdges, Bool)</param>
         /// <returns>An IEnumerable of incoming edges</returns>
         [OperationContract]
-        List<Tuple<Int64, Int64, List<ServiceVertexInstance>>> GetAllIncomingVertices(SecurityToken mySecurityToken, Int64 myTransToken, ServiceVertexInstance myVertex);
+        List<ServiceIncomingVerticesContainer> GetAllIncomingVertices(SecurityToken mySecurityToken, Int64 myTransToken, ServiceVertexInstance myVertex);
 
         /// <summary>
         /// Return all incoming vertices
@@ -166,7 +166,7 @@ namespace sones.GraphDS.Services.RemoteAPIService.ServiceContracts.VertexInstanc
         /// <param name="myFilter">A function to filter properties</param>
         /// <returns>An IEnumerable of Property/Value</returns>
         [OperationContract(Name = "GetAllPropertiesByVertexInstance")]
-        List<Tuple<Int64, object>> GetAllProperties(SecurityToken mySecurityToken, Int64 myTransToken, ServiceVertexInstance myGraphElement);
+        List<ServicePropertyContainer> GetAllProperties(SecurityToken mySecurityToken, Int64 myTransToken, ServiceVertexInstance myGraphElement);
 
         /// <summary>
         /// Returns a property as string
@@ -210,7 +210,7 @@ namespace sones.GraphDS.Services.RemoteAPIService.ServiceContracts.VertexInstanc
         /// <param name="myFilter">A function to filter properties</param>
         /// <returns>An IEnumerable of NameOfProperty/Value</returns>
         [OperationContract(Name = "GetAllUnstructuredPropertiesByVertexInstance")]
-        List<Tuple<String, Object>> GetAllUnstructuredProperties(SecurityToken mySecurityToken, Int64 myTransToken, ServiceVertexInstance myGraphElement);
+        List<ServiceUnstructuredPropertyContainer> GetAllUnstructuredProperties(SecurityToken mySecurityToken, Int64 myTransToken, ServiceVertexInstance myGraphElement);
 
         /// <summary>
         /// Returns an unstructured property as string

@@ -39,7 +39,7 @@ namespace sones.Library.CollectionWrapper
         /// <summary>
         /// The actual value of the wrapper
         /// </summary>
-        public ISet<IComparable> Value;
+        public HashSet<IComparable> Value;
 
         #endregion
 

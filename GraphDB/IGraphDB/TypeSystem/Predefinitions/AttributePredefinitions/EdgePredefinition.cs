@@ -45,14 +45,14 @@ namespace sones.GraphDB.TypeSystem
         /// <summary>
         /// The IDs of the vertices where to connect to.
         /// </summary>
-        public IDictionary<String, ISet<long>> VertexIDsByVertexTypeName { get { return _vertexIDsByVertexTypeName; } }
-        private Dictionary<String, ISet<long>> _vertexIDsByVertexTypeName;
+        public IDictionary<String, HashSet<long>> VertexIDsByVertexTypeName { get { return _vertexIDsByVertexTypeName; } }
+        private Dictionary<String, HashSet<long>> _vertexIDsByVertexTypeName;
 
         /// <summary>
         /// The IDs of the vertices where to connect to.
         /// </summary>
-        public IDictionary<Int64, ISet<long>> VertexIDsByVertexTypeID { get { return _vertexIDsByVertexTypeID; } }
-        private Dictionary<Int64, ISet<long>> _vertexIDsByVertexTypeID;
+        public IDictionary<Int64, HashSet<long>> VertexIDsByVertexTypeID { get { return _vertexIDsByVertexTypeID; } }
+        private Dictionary<Int64, HashSet<long>> _vertexIDsByVertexTypeID;
 
         /// <summary>
         /// The well defined properties of a vertex.
@@ -235,18 +235,18 @@ namespace sones.GraphDB.TypeSystem
         #endregion
 
 
-        private ISet<long> EnsureHashSet(String myVertexType)
+        private HashSet<long> EnsureHashSet(String myVertexType)
         {
-            _vertexIDsByVertexTypeName = _vertexIDsByVertexTypeName ?? new Dictionary<String, ISet<long>>();
+            _vertexIDsByVertexTypeName = _vertexIDsByVertexTypeName ?? new Dictionary<String, HashSet<long>>();
             if (!_vertexIDsByVertexTypeName.ContainsKey(myVertexType))
                 _vertexIDsByVertexTypeName.Add(myVertexType, new HashSet<long>());
 
             return _vertexIDsByVertexTypeName[myVertexType];
         }
 
-        private ISet<long> EnsureHashSet(long myVertexTypeID)
+        private HashSet<long> EnsureHashSet(long myVertexTypeID)
         {
-            _vertexIDsByVertexTypeID = _vertexIDsByVertexTypeID ?? new Dictionary<long, ISet<long>>();
+            _vertexIDsByVertexTypeID = _vertexIDsByVertexTypeID ?? new Dictionary<long, HashSet<long>>();
             if (!_vertexIDsByVertexTypeID.ContainsKey(myVertexTypeID))
                 _vertexIDsByVertexTypeID.Add(myVertexTypeID, new HashSet<long>());
 

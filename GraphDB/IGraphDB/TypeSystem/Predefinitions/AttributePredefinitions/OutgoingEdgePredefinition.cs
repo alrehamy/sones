@@ -105,7 +105,7 @@ namespace sones.GraphDB.TypeSystem
         /// <returns>The reference of the current object. (fluent interface).</returns>
         public OutgoingEdgePredefinition SetEdgeType(String myEdgeType)
         {
-            if (!String.IsNullOrWhiteSpace(myEdgeType))
+            if (!String.IsNullOrEmpty(myEdgeType))
                 EdgeType = myEdgeType;
             return this;
         }

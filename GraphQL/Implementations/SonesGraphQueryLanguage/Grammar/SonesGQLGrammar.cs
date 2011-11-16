@@ -3262,7 +3262,7 @@ namespace sones.GraphQL
         }
 
         private string CreateGraphDMLforDefinedProperties(
-            IEnumerable<Tuple<long, IComparable>> myStructuredProperties,
+            IEnumerable<PropertyContainer> myStructuredProperties,
             Dictionary<long, IPropertyDefinition> myPropertyDefinitions)
         {
             var stringBuilder = new StringBuilder();
@@ -3272,12 +3272,12 @@ namespace sones.GraphQL
 
             foreach (var attribute in myStructuredProperties)
             {
-                if (attribute.Item2 == null)
+                if (attribute.Property == null)
                 {
                     continue;
                 }
 
-                var typeAttribute = myPropertyDefinitions[attribute.Item1];
+                var typeAttribute = myPropertyDefinitions[attribute.PropertyID];
 
                 switch (typeAttribute.Multiplicity)
                 {
@@ -3287,7 +3287,7 @@ namespace sones.GraphQL
 
                         stringBuilder.Append(String.Concat(typeAttribute.Name,
                                                             " = ",
-                                                            CreateGraphDMLforSingleAttribute(attribute.Item2),
+                                                            CreateGraphDMLforSingleAttribute(attribute.Property),
                                                             delimiter));
 
                         #endregion
@@ -3299,7 +3299,7 @@ namespace sones.GraphQL
                         #region List
 
                         stringBuilder.Append(String.Concat(typeAttribute.Name, " = ", S_LISTOF.ToUpperString(), " ", S_BRACKET_LEFT));
-                        foreach (var val in (attribute.Item2 as ICollectionWrapper))
+                        foreach (var val in (attribute.Property as ICollectionWrapper))
                         {
                             if (typeAttribute.BaseType == typeof(String))
                                 stringBuilder.Append("'" + CreateGraphDMLforSingleAttribute(val) + "'" + delimiter);
@@ -3318,7 +3318,7 @@ namespace sones.GraphQL
                         #region Set
 
                         stringBuilder.Append(String.Concat(typeAttribute.Name, " = ", S_SETOF.ToUpperString(), " ", S_BRACKET_LEFT));
-                        foreach (var val in (attribute.Item2 as ICollectionWrapper))
+                        foreach (var val in (attribute.Property as ICollectionWrapper))
                         {
                             if (typeAttribute.BaseType == typeof(String))
                                 stringBuilder.Append("'" + CreateGraphDMLforSingleAttribute(val) + "'" + delimiter);
@@ -3363,7 +3363,7 @@ namespace sones.GraphQL
         }
 
         private string CreateGraphDMLforVertexUnstructuredProperties(
-            IEnumerable<Tuple<string, object>> myUnstructuredProperties,
+            IEnumerable<UnstructuredPropertyContainer> myUnstructuredProperties,
             Dictionary<long, IPropertyDefinition> myPropertyDefinitions)
         {
             var stringBuilder = new StringBuilder();
@@ -3373,14 +3373,14 @@ namespace sones.GraphQL
 
             foreach (var attribute in myUnstructuredProperties)
             {
-                if (attribute.Item2 == null)
+                if (attribute.Property == null)
                 {
                     continue;
                 }
 
                 #region Single
 
-                stringBuilder.Append(String.Concat(attribute.Item1, " = ", CreateGraphDMLforSingleAttribute(attribute.Item2)));
+                stringBuilder.Append(String.Concat(attribute.PropertyName, " = ", CreateGraphDMLforSingleAttribute(attribute.Property)));
 
                 #endregion
 
@@ -3395,7 +3395,7 @@ namespace sones.GraphQL
         }
 
         private string CreateGraphDMLforVertexOutgoingSingleEdges(IVertexType myVertexType,
-                                                                    IEnumerable<Tuple<long, ISingleEdge>> myEdges,
+                                                                    IEnumerable<SingleEdgeContainer> myEdges,
                                                                     Dictionary<long, IOutgoingEdgeDefinition> myOutgoingEdgeDefinitions)
         {
             var stringBuilder = new StringBuilder();
@@ -3403,20 +3403,20 @@ namespace sones.GraphQL
 
             foreach (var edge in myEdges)
             {
-                if (edge.Item2 == null)
+                if (edge.Edge == null)
                 {
                     continue;
                 }
 
-                var def = myOutgoingEdgeDefinitions[edge.Item1];
+                var def = myOutgoingEdgeDefinitions[edge.PropertyID];
 
-                stringBuilder.Append(String.Concat(def.Name, " = ", S_REFUUID.ToUpperString(), TERMINAL_LT, _vertexTypes[edge.Item2.GetTargetVertex().VertexTypeID], TERMINAL_GT, S_BRACKET_LEFT));
+                stringBuilder.Append(String.Concat(def.Name, " = ", S_REFUUID.ToUpperString(), TERMINAL_LT, _vertexTypes[edge.Edge.GetTargetVertex().VertexTypeID], TERMINAL_GT, S_BRACKET_LEFT));
 
-                stringBuilder.Append(String.Concat(edge.Item2.GetTargetVertex().VertexID, delimiter));
+                stringBuilder.Append(String.Concat(edge.Edge.GetTargetVertex().VertexID, delimiter));
 
-                if (edge.Item2.GetAllProperties().Count() > 0)
+                if (edge.Edge.GetAllProperties().Count() > 0)
                 {
-                    stringBuilder.Append(CreateGraphDMLforVertexDefinedProperties(edge.Item2.GetAllProperties(), myOutgoingEdgeDefinitions));
+                    stringBuilder.Append(CreateGraphDMLforVertexDefinedProperties(edge.Edge.GetAllProperties(), myOutgoingEdgeDefinitions));
                 }
 
                 stringBuilder.RemoveSuffix(delimiter);
@@ -3430,7 +3430,7 @@ namespace sones.GraphQL
         }
 
         private string CreateGraphDMLforVertexOutgoingHyperEdges(IVertexType myVertexType,
-                                                                    IEnumerable<Tuple<long, IHyperEdge>> myEdges,
+                                                                    IEnumerable<HyperEdgeContainer> myEdges,
                                                                     Dictionary<long, IOutgoingEdgeDefinition> myOutgoingEdgeDefinitions)
         {
             var stringBuilder = new StringBuilder();
@@ -3438,14 +3438,14 @@ namespace sones.GraphQL
 
             foreach (var hyperEdge in myEdges)
             {
-                if (hyperEdge.Item2 == null)
+                if (hyperEdge.Edge == null)
                 {
                     continue;
                 }
 
-                var outgoingEdgeDef = myOutgoingEdgeDefinitions[hyperEdge.Item1];
+                var outgoingEdgeDef = myOutgoingEdgeDefinitions[hyperEdge.PropertyID];
 
-                foreach (var aEdge in hyperEdge.Item2.GetAllEdges().GroupBy(x => x.GetTargetVertex().VertexTypeID, y => y))
+                foreach (var aEdge in hyperEdge.Edge.GetAllEdges().GroupBy(x => x.GetTargetVertex().VertexTypeID, y => y))
                 {
                     stringBuilder.Append(String.Concat(outgoingEdgeDef.Name,
                                                         " = ",
@@ -3495,7 +3495,7 @@ namespace sones.GraphQL
         }
 
         private string CreateGraphDMLforVertexDefinedProperties(
-            IEnumerable<Tuple<long, IComparable>> myStructuredProperties,
+            IEnumerable<PropertyContainer> myStructuredProperties,
             Dictionary<long, IOutgoingEdgeDefinition> myOutgoingEdgeDefinitions)
         {
             var stringBuilder = new StringBuilder();
@@ -3503,15 +3503,15 @@ namespace sones.GraphQL
 
             foreach (var attribute in myStructuredProperties)
             {
-                if (attribute.Item2 == null)
+                if (attribute.Property == null)
                 {
                     continue;
                 }
 
-                if (!myOutgoingEdgeDefinitions.ContainsKey(attribute.Item1))
+                if (!myOutgoingEdgeDefinitions.ContainsKey(attribute.PropertyID))
                     continue;
 
-                var typeAttribute = myOutgoingEdgeDefinitions[attribute.Item1];
+                var typeAttribute = myOutgoingEdgeDefinitions[attribute.PropertyID];
 
                 switch (typeAttribute.Multiplicity)
                 {
@@ -3519,7 +3519,7 @@ namespace sones.GraphQL
 
                         #region Single
 
-                        stringBuilder.Append(String.Concat(S_BRACKET_LEFT, typeAttribute.Name, " = ", CreateGraphDMLforSingleAttribute(attribute.Item2), S_BRACKET_RIGHT));
+                        stringBuilder.Append(String.Concat(S_BRACKET_LEFT, typeAttribute.Name, " = ", CreateGraphDMLforSingleAttribute(attribute.Property), S_BRACKET_RIGHT));
 
                         #endregion
 
@@ -3531,7 +3531,7 @@ namespace sones.GraphQL
 
                         stringBuilder.Append(String.Concat(typeAttribute.Name, " = ", S_SETOF.ToUpperString(), " ", S_BRACKET_LEFT));
 
-                        foreach (var val in (attribute.Item2 as ICollection))
+                        foreach (var val in (attribute.Property as ICollection))
                         {
                             stringBuilder.Append(CreateGraphDMLforSingleAttribute(val) + delimiter);
                         }

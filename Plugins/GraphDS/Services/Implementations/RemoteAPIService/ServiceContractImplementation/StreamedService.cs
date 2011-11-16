@@ -42,11 +42,11 @@ namespace sones.GraphDS.Services.RemoteAPIService.ServiceContractImplementation
             return Response.GetBinaryProperty(myPropertyID);
         }
 
-        public List<Tuple<long, Stream>> GetAllBinaryProperties(SecurityToken mySecurityToken, long myTransToken, ServiceVertexInstance myVertex)
+        public List<ServiceBinaryPropertyContainer> GetAllBinaryProperties(SecurityToken mySecurityToken, long myTransToken, ServiceVertexInstance myVertex)
         {
             var Request = ServiceRequestFactory.MakeRequestGetVertex(myVertex.TypeID, myVertex.VertexID);
             var Response = this.GraphDS.GetVertex<IVertex>(mySecurityToken, myTransToken, Request, ServiceReturnConverter.ConvertOnlyVertexInstance);
-            return Response.GetAllBinaryProperties().ToList();
+            return Response.GetAllBinaryProperties().Select(_ => new ServiceBinaryPropertyContainer { PropertyID = _.PropertyID, BinaryPropery = _.BinaryPropery }).ToList();
         }
 
         public void SetBinaryProperty(SetBinaryPropertyMessage myMessage)

@@ -185,7 +185,7 @@ namespace sones.GraphFS.Element.Vertex
                    IncomingEdges[myVertexTypeID].ContainsKey(myEdgePropertyID);
         }
 
-        public IEnumerable<Tuple<long, long, IEnumerable<IVertex>>> GetAllIncomingVertices(
+        public IEnumerable<IncomingVerticesContainer> GetAllIncomingVertices(
             PropertyHyperGraphFilter.IncomingVerticesFilter myFilter = null)
         {
             if (IncomingEdges != null)
@@ -198,12 +198,12 @@ namespace sones.GraphFS.Element.Vertex
                         {
                             if (myFilter(aType.Key, aEdge.Key, aEdge.Value))
                             {
-                                yield return new Tuple<long, long, IEnumerable<IVertex>>(aType.Key, aEdge.Key, aEdge.Value);
+                                yield return new IncomingVerticesContainer { VertexTypeID = aType.Key, EdgePropertyID = aEdge.Key, IncomingVertices = aEdge.Value };
                             }
                         }
                         else
                         {
-                            yield return new Tuple<long, long, IEnumerable<IVertex>>(aType.Key, aEdge.Key, aEdge.Value);
+                            yield return new IncomingVerticesContainer { VertexTypeID = aType.Key, EdgePropertyID = aEdge.Key, IncomingVertices = aEdge.Value };
                         }
                     }
                 }
@@ -225,7 +225,7 @@ namespace sones.GraphFS.Element.Vertex
                    OutgoingEdges.ContainsKey(myEdgePropertyID);
         }
 
-        public IEnumerable<Tuple<long, IEdge>> GetAllOutgoingEdges(PropertyHyperGraphFilter.OutgoingEdgeFilter myFilter = null)
+        public IEnumerable<EdgeContainer> GetAllOutgoingEdges(PropertyHyperGraphFilter.OutgoingEdgeFilter myFilter = null)
         {
             if (OutgoingEdges != null)
             {
@@ -235,12 +235,12 @@ namespace sones.GraphFS.Element.Vertex
                     {
                         if (myFilter(aEdge.Key, aEdge.Value))
                         {
-                            yield return new Tuple<long, IEdge>(aEdge.Key, aEdge.Value);
+                            yield return new EdgeContainer { PropertyID = aEdge.Key, Edge = aEdge.Value };
                         }
                     }
                     else
                     {
-                        yield return new Tuple<long, IEdge>(aEdge.Key, aEdge.Value);
+                        yield return new EdgeContainer { PropertyID = aEdge.Key, Edge = aEdge.Value };
                     }
                 }
             }
@@ -248,7 +248,7 @@ namespace sones.GraphFS.Element.Vertex
             yield break;
         }
 
-        public IEnumerable<Tuple<long, IHyperEdge>> GetAllOutgoingHyperEdges(
+        public IEnumerable<HyperEdgeContainer> GetAllOutgoingHyperEdges(
             PropertyHyperGraphFilter.OutgoingHyperEdgeFilter myFilter = null)
         {
             if (OutgoingEdges != null)
@@ -263,12 +263,12 @@ namespace sones.GraphFS.Element.Vertex
                     {
                         if (myFilter(aEdge.Key, interestingEdge))
                         {
-                            yield return new Tuple<long, IHyperEdge>(aEdge.Key, interestingEdge);
+                            yield return new HyperEdgeContainer { PropertyID = aEdge.Key, Edge = interestingEdge };
                         }
                     }
                     else
                     {
-                        yield return new Tuple<long, IHyperEdge>(aEdge.Key, interestingEdge);
+                        yield return new HyperEdgeContainer { PropertyID = aEdge.Key, Edge = interestingEdge };
                     }
                 }
             }
@@ -276,7 +276,7 @@ namespace sones.GraphFS.Element.Vertex
             yield break;
         }
 
-        public IEnumerable<Tuple<long, ISingleEdge>> GetAllOutgoingSingleEdges(
+        public IEnumerable<SingleEdgeContainer> GetAllOutgoingSingleEdges(
             PropertyHyperGraphFilter.OutgoingSingleEdgeFilter myFilter = null)
         {
             if (OutgoingEdges != null)
@@ -291,12 +291,12 @@ namespace sones.GraphFS.Element.Vertex
                     {
                         if (myFilter(aEdge.Key, interestingEdge))
                         {
-                            yield return new Tuple<long, ISingleEdge>(aEdge.Key, interestingEdge);
+                            yield return new SingleEdgeContainer { PropertyID = aEdge.Key, Edge = interestingEdge };
                         }
                     }
                     else
                     {
-                        yield return new Tuple<long, ISingleEdge>(aEdge.Key, interestingEdge);
+                        yield return new SingleEdgeContainer { PropertyID = aEdge.Key, Edge = interestingEdge };
                     }
                 }
             }
@@ -344,7 +344,7 @@ namespace sones.GraphFS.Element.Vertex
             }
         }
 
-        public IEnumerable<Tuple<long, Stream>> GetAllBinaryProperties(PropertyHyperGraphFilter.BinaryPropertyFilter myFilter = null)
+        public IEnumerable<BinaryPropertyContainer> GetAllBinaryProperties(PropertyHyperGraphFilter.BinaryPropertyFilter myFilter = null)
         {
             if (_binaryProperties != null)
             {
@@ -354,12 +354,12 @@ namespace sones.GraphFS.Element.Vertex
                     {
                         if (myFilter(aBinary.Key, aBinary.Value))
                         {
-                            yield return new Tuple<long, Stream>(aBinary.Key, aBinary.Value);
+                            yield return new BinaryPropertyContainer { PropertyID = aBinary.Key, BinaryPropery = aBinary.Value };
                         }
                     }
                     else
                     {
-                        yield return new Tuple<long, Stream>(aBinary.Key, aBinary.Value);
+                        yield return new BinaryPropertyContainer { PropertyID = aBinary.Key, BinaryPropery = aBinary.Value };
                     }
                 }
             }
@@ -400,7 +400,7 @@ namespace sones.GraphFS.Element.Vertex
             return _structuredProperties == null ? 0 : _structuredProperties.Count;
         }
 
-        public IEnumerable<Tuple<long, IComparable>> GetAllProperties(PropertyHyperGraphFilter.GraphElementStructuredPropertyFilter myFilter = null)
+        public IEnumerable<PropertyContainer> GetAllProperties(PropertyHyperGraphFilter.GraphElementStructuredPropertyFilter myFilter = null)
         {
             return GetAllPropertiesProtected(myFilter);
         }
@@ -438,7 +438,7 @@ namespace sones.GraphFS.Element.Vertex
             return _unstructuredProperties == null ? 0 : _unstructuredProperties.Count;
         }
 
-        public IEnumerable<Tuple<string, object>> GetAllUnstructuredProperties(
+        public IEnumerable<UnstructuredPropertyContainer> GetAllUnstructuredProperties(
             PropertyHyperGraphFilter.GraphElementUnStructuredPropertyFilter myFilter = null)
         {
             return GetAllUnstructuredPropertiesProtected(myFilter);

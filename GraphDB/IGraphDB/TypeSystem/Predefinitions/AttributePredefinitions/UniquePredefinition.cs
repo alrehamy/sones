@@ -36,7 +36,7 @@ namespace sones.GraphDB.TypeSystem
         /// <summary>
         /// The set of properties that will be unique together.
         /// </summary>
-        public ISet<String> Properties { get { return _properties; } }
+        public HashSet<String> Properties { get { return _properties; } }
 
         /// <summary>
         /// Creates a new instance of UniquePredefinition.

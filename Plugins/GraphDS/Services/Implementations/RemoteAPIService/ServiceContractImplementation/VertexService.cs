@@ -23,11 +23,17 @@ namespace sones.GraphDS.Services.RemoteAPIService.ServiceContractImplementation
             return Response.HasIncomingVertices(myVertexTypeID, myEdgePropertyID);
         }
 
-        public List<Tuple<long, long, List<ServiceVertexInstance>>> GetAllIncomingVertices(SecurityToken mySecurityToken, Int64 myTransToken, ServiceVertexInstance myVertex)
+        public List<ServiceIncomingVerticesContainer> GetAllIncomingVertices(SecurityToken mySecurityToken, Int64 myTransToken, ServiceVertexInstance myVertex)
         {
             var Request = ServiceRequestFactory.MakeRequestGetVertex(myVertex.TypeID, myVertex.VertexID);
             var Response = this.GraphDS.GetVertex<IVertex>(mySecurityToken, myTransToken, Request, ServiceReturnConverter.ConvertOnlyVertexInstance);
-            return Response.GetAllIncomingVertices().Select(x => new Tuple<long, long, List<ServiceVertexInstance>>(x.Item1, x.Item2, x.Item3.Select(y => new ServiceVertexInstance(y)).ToList())).ToList();
+            return Response.GetAllIncomingVertices().Select(
+                x => new ServiceIncomingVerticesContainer 
+                    { 
+                        VertexTypeID = x.VertexTypeID, 
+                        EdgePropertyID = x.EdgePropertyID, 
+                        IncomingVertices = x.IncomingVertices.Select(y => new ServiceVertexInstance(y)).ToList()
+                    } ).ToList();
         }
 
         public List<ServiceVertexInstance> GetIncomingVertices(SecurityToken mySecurityToken, Int64 myTransToken, ServiceVertexInstance myVertex, long myVertexTypeID, long myEdgePropertyID)
@@ -48,12 +54,12 @@ namespace sones.GraphDS.Services.RemoteAPIService.ServiceContractImplementation
         {
             var Request = ServiceRequestFactory.MakeRequestGetVertex(myVertex.TypeID, myVertex.VertexID);
             var Response = this.GraphDS.GetVertex<IVertex>(mySecurityToken, myTransToken, Request, ServiceReturnConverter.ConvertOnlyVertexInstance);
-            return Response.GetAllOutgoingEdges().Select<Tuple<long, IEdge>, ServiceEdgeInstance>(x =>
+            return Response.GetAllOutgoingEdges().Select<EdgeContainer, ServiceEdgeInstance>(x =>
             {
-                if (x.Item2 is ISingleEdge)
-                    return new ServiceSingleEdgeInstance(x.Item2 as ISingleEdge, x.Item1);
+                if (x.Edge is ISingleEdge)
+                    return new ServiceSingleEdgeInstance(x.Edge as ISingleEdge, x.PropertyID);
                 else
-                    return new ServiceHyperEdgeInstance(x.Item2 as IHyperEdge, x.Item1);
+                    return new ServiceHyperEdgeInstance(x.Edge as IHyperEdge, x.PropertyID);
             }).ToList();
         }
 
@@ -61,14 +67,14 @@ namespace sones.GraphDS.Services.RemoteAPIService.ServiceContractImplementation
         {
             var Request = ServiceRequestFactory.MakeRequestGetVertex(myVertex.TypeID, myVertex.VertexID);
             var Response = this.GraphDS.GetVertex<IVertex>(mySecurityToken, myTransToken, Request, ServiceReturnConverter.ConvertOnlyVertexInstance);
-            return Response.GetAllOutgoingHyperEdges().Select(x => new ServiceHyperEdgeInstance(x.Item2, x.Item1)).ToList();
+            return Response.GetAllOutgoingHyperEdges().Select(x => new ServiceHyperEdgeInstance(x.Edge, x.PropertyID)).ToList();
         }
 
         public List<ServiceSingleEdgeInstance> GetAllOutgoingSingleEdges(SecurityToken mySecurityToken, Int64 myTransToken, ServiceVertexInstance myVertex)
         {
             var Request = ServiceRequestFactory.MakeRequestGetVertex(myVertex.TypeID, myVertex.VertexID);
             var Response = this.GraphDS.GetVertex<IVertex>(mySecurityToken, myTransToken, Request, ServiceReturnConverter.ConvertOnlyVertexInstance);
-            return Response.GetAllOutgoingSingleEdges().Select(x => new ServiceSingleEdgeInstance(x.Item2, x.Item1)).ToList();
+            return Response.GetAllOutgoingSingleEdges().Select(x => new ServiceSingleEdgeInstance(x.Edge, x.PropertyID)).ToList();
         }
 
         public ServiceEdgeInstance GetOutgoingEdge(SecurityToken mySecurityToken, Int64 myTransToken, ServiceVertexInstance myVertex, long myEdgePropertyID)
@@ -128,11 +134,11 @@ namespace sones.GraphDS.Services.RemoteAPIService.ServiceContractImplementation
             return Response.GetCountOfProperties();
         }
 
-        public List<Tuple<long, object>> GetAllProperties(SecurityToken mySecurityToken, Int64 myTransToken, ServiceVertexInstance myVertex)
+        public List<ServicePropertyContainer> GetAllProperties(SecurityToken mySecurityToken, Int64 myTransToken, ServiceVertexInstance myVertex)
         {
             var Request = ServiceRequestFactory.MakeRequestGetVertex(myVertex.TypeID, myVertex.VertexID);
             var Response = this.GraphDS.GetVertex<IVertex>(mySecurityToken, myTransToken, Request, ServiceReturnConverter.ConvertOnlyVertexInstance);
-            return Response.GetAllProperties().Select(x => new Tuple<long, object>(x.Item1, (object)x.Item2)).ToList();
+            return Response.GetAllProperties().Select(x => new ServicePropertyContainer { PropertyID = x.PropertyID, Property = (object)x.Property }).ToList();
         }
 
         public string GetPropertyAsString(SecurityToken mySecurityToken, Int64 myTransToken, ServiceVertexInstance myVertex, long myPropertyID)
@@ -163,11 +169,11 @@ namespace sones.GraphDS.Services.RemoteAPIService.ServiceContractImplementation
             return Response.GetCountOfUnstructuredProperties();
         }
 
-        public List<Tuple<string, object>> GetAllUnstructuredProperties(SecurityToken mySecurityToken, Int64 myTransToken, ServiceVertexInstance myVertex)
+        public List<ServiceUnstructuredPropertyContainer> GetAllUnstructuredProperties(SecurityToken mySecurityToken, Int64 myTransToken, ServiceVertexInstance myVertex)
         {
             var Request = ServiceRequestFactory.MakeRequestGetVertex(myVertex.TypeID, myVertex.VertexID);
             var Response = this.GraphDS.GetVertex<IVertex>(mySecurityToken, myTransToken, Request, ServiceReturnConverter.ConvertOnlyVertexInstance);
-            return Response.GetAllUnstructuredProperties().ToList();
+            return Response.GetAllUnstructuredProperties().Select(_ => new ServiceUnstructuredPropertyContainer { PropertyName = _.PropertyName, Property = _.Property }).ToList();
         }
 
         public string GetUnstructuredPropertyAsString(SecurityToken mySecurityToken, Int64 myTransToken, ServiceVertexInstance myVertex, string myPropertyName)

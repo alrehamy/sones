@@ -55,7 +55,7 @@ namespace sones.GraphQL.Result
         /// Returns all properties of a graph element
         /// </summary>
         /// <returns>All properties in Key/Value manner</returns>
-        IEnumerable<Tuple<String, Object>> GetAllProperties();
+        IEnumerable<PropertyViewContainer> GetAllProperties();
 
         /// <summary>
         /// Gets a certain property as string

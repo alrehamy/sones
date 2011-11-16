@@ -473,7 +473,7 @@ namespace sones.GraphDB.Manager.Index
                 
                 var options = (indexVertex.GetAllUnstructuredProperties() == null)
                                 ? null
-                                : indexVertex.GetAllUnstructuredProperties().Select(_ => new KeyValuePair<String, object>(_.Item1, _.Item2));
+                                : indexVertex.GetAllUnstructuredProperties().Select(_ => new KeyValuePair<String, object>(_.PropertyName, _.Property));
 
                 // add propertyIDs for indexing
                 parameter.Add(IndexConstants.PROPERTY_IDS_OPTIONS_KEY, def.IndexedProperties.Select(propDef => propDef.ID).ToList());

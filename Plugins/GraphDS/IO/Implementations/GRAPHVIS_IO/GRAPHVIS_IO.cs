@@ -288,13 +288,13 @@ namespace sones.Plugins.GraphDS.IO
             {
                 foreach (var property in aVertex.GetAllProperties())
                 {
-                    if ((property.Item1 != null) && (property.Item2 != null))
+                    if ((property.PropertyName != null) && (property.Property != null))
                     {
-                        if ((property.Item1 is String) && (property.Item1.ToString().ToUpper().IndexOf("NODE")) >= 0)
+                        if ((property.PropertyName is String) && (property.PropertyName.ToString().ToUpper().IndexOf("NODE")) >= 0)
                         {
-                            if (!Nodes.Exists((s) => (s == property.Item2.ToString())))
+                            if (!Nodes.Exists((s) => (s == property.Property.ToString())))
                             {
-                                Nodes.Add(property.Item2.ToString());
+                                Nodes.Add(property.Property.ToString());
                             }
                         }
                     }
@@ -302,7 +302,7 @@ namespace sones.Plugins.GraphDS.IO
 
                 foreach (var edge in aVertex.GetAllEdges())
                 {
-                    GenerateNodeList_AnalyzeVertices(edge.Item2.GetTargetVertices(), ref Nodes);
+                    GenerateNodeList_AnalyzeVertices(edge.Edge.GetTargetVertices(), ref Nodes);
                 }
             }
         }
@@ -335,23 +335,23 @@ namespace sones.Plugins.GraphDS.IO
 
                 foreach (var property in aVertex.GetAllProperties())
                 {
-                    if ((property.Item1 is String) && (property.Item1.ToString().ToUpper().IndexOf("NODE") >= 0) && (property.Item2 is String))
+                    if ((property.PropertyName is String) && (property.PropertyName.ToString().ToUpper().IndexOf("NODE") >= 0) && (property.Property is String))
                     {
-                        sourcename = property.Item2.ToString();
+                        sourcename = property.Property.ToString();
                     }
                 }
 
                 foreach (var edge in aVertex.GetAllEdges())
                 {
-                    foreach (var targetvertex in edge.Item2.GetTargetVertices())
+                    foreach (var targetvertex in edge.Edge.GetTargetVertices())
                     {
                         string targetname = null;
 
                         foreach (var property in targetvertex.GetAllProperties())
                         {
-                            if ((property.Item1 is String) && (property.Item1.ToString().ToUpper().IndexOf("NODE") >= 0) && (property.Item2 is String))
+                            if ((property.PropertyName is String) && (property.PropertyName.ToString().ToUpper().IndexOf("NODE") >= 0) && (property.Property is String))
                             {
-                                targetname = property.Item2.ToString();
+                                targetname = property.Property.ToString();
                                 break;
                             }
                         }
@@ -360,7 +360,7 @@ namespace sones.Plugins.GraphDS.IO
                         {
                             NodeLink newlink = new NodeLink();
 
-                            if (edge.Item1 is String) newlink.name = edge.Item1.ToString();
+                            if (edge.EdgeName is String) newlink.name = edge.EdgeName.ToString();
                             else newlink.name = "";
                             newlink.source = Nodes.IndexOf(sourcename);
                             newlink.target = Nodes.IndexOf(targetname);
@@ -372,7 +372,7 @@ namespace sones.Plugins.GraphDS.IO
                         }
                     }
 
-                    GenerateLinkList_AnalyzeVertices(edge.Item2.GetTargetVertices(), Nodes, ref Links);
+                    GenerateLinkList_AnalyzeVertices(edge.Edge.GetTargetVertices(), Nodes, ref Links);
                 }
             }
         }

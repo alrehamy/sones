@@ -47,7 +47,7 @@ namespace sones.Library.PropertyHyperGraph
 		/// </summary>
 		/// <param name="myFilter">A function to filter those incoming edges (VertexTypeID, EdgeID, ISingleEdges, Bool)</param>
 		/// <returns>An IEnumerable of incoming edges</returns>
-		IEnumerable<Tuple<Int64, Int64, IEnumerable<IVertex>>> GetAllIncomingVertices(
+        IEnumerable<IncomingVerticesContainer> GetAllIncomingVertices(
 			PropertyHyperGraphFilter.IncomingVerticesFilter myFilter = null);
 
 		/// <summary>
@@ -74,7 +74,7 @@ namespace sones.Library.PropertyHyperGraph
 		/// </summary>
 		/// <param name="myFilter">A function to filter those edges (EdgeID, IEdge, Bool)</param>
 		/// <returns>An IEnumerable of all outgoing edges</returns>
-		IEnumerable<Tuple<Int64, IEdge>> GetAllOutgoingEdges(
+		IEnumerable<EdgeContainer> GetAllOutgoingEdges(
 			PropertyHyperGraphFilter.OutgoingEdgeFilter myFilter = null);
 
 		/// <summary>
@@ -82,7 +82,7 @@ namespace sones.Library.PropertyHyperGraph
 		/// </summary>
 		/// <param name="myFilter">A function to filter those edges (EdgeID, IHyperEdge, Bool)</param>
 		/// <returns>An IEnumerable of propertyID/hyper edge KVP</returns>
-		IEnumerable<Tuple<Int64, IHyperEdge>> GetAllOutgoingHyperEdges(
+		IEnumerable<HyperEdgeContainer> GetAllOutgoingHyperEdges(
 			PropertyHyperGraphFilter.OutgoingHyperEdgeFilter myFilter = null);
 
 		/// <summary>
@@ -90,7 +90,7 @@ namespace sones.Library.PropertyHyperGraph
 		/// </summary>
 		/// <param name="myFilter">A function to filter those edges (EdgeID, ISingleEdge, Bool)</param>
 		/// <returns>An IEnumerable of all single edges</returns>
-		IEnumerable<Tuple<Int64, ISingleEdge>> GetAllOutgoingSingleEdges(
+		IEnumerable<SingleEdgeContainer> GetAllOutgoingSingleEdges(
 			PropertyHyperGraphFilter.OutgoingSingleEdgeFilter myFilter = null);
 
 		/// <summary>
@@ -136,7 +136,7 @@ namespace sones.Library.PropertyHyperGraph
 		/// </summary>
 		/// <param name="myFilter">A function to filter the binary properties</param> 
 		/// <returns>An IEnumerable of PropertyID/stream KVP</returns>
-		IEnumerable<Tuple<Int64, Stream>> GetAllBinaryProperties(PropertyHyperGraphFilter.BinaryPropertyFilter myFilter = null);
+		IEnumerable<BinaryPropertyContainer> GetAllBinaryProperties(PropertyHyperGraphFilter.BinaryPropertyFilter myFilter = null);
 
 		#endregion
 	}

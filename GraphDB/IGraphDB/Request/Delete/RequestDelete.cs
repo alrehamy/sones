@@ -74,7 +74,7 @@ namespace sones.GraphDB.Request
         /// <returns>The request itself</returns>
         public RequestDelete AddAttribute(String myAttributeName)
         {
-            if (!String.IsNullOrWhiteSpace(myAttributeName))
+            if (!String.IsNullOrEmpty(myAttributeName))
             {
                 ToBeDeletedAttributes.Add(myAttributeName);                
             }

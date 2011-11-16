@@ -105,12 +105,12 @@ namespace sones.GraphQL.Result
             
             for (int i = 0; i <= xProperties.Count; i++)
             {
-                if (xProperties[i].Item1 != yProperties[i].Item1)
+                if (xProperties[i].PropertyName != yProperties[i].PropertyName)
                 {
                     return false;
                 }
 
-                if (!xProperties[i].Item2.Equals(yProperties[i].Item2))
+                if (!xProperties[i].Property.Equals(yProperties[i].Property))
                 {
                     return false;
                 }
@@ -126,12 +126,12 @@ namespace sones.GraphQL.Result
 
             for (int i = 0; i <= xBinaryProperties.Count; i++)
             {
-                if (xBinaryProperties[i].Item1 != yBinaryProperties[i].Item1)
+                if (xBinaryProperties[i].PropertyName != yBinaryProperties[i].PropertyName)
                 {
                     return false;
                 }
 
-                if (!xBinaryProperties[i].Item2.Equals(yBinaryProperties[i].Item2))
+                if (!xBinaryProperties[i].BinaryPropery.Equals(yBinaryProperties[i].BinaryPropery))
                 {
                     return false;
                 }
@@ -147,13 +147,13 @@ namespace sones.GraphQL.Result
 
             for (int i = 0; i <= xEdges.Count; i++)
             {
-                if (xEdges[i].Item1 != xEdges[i].Item1)
+                if (xEdges[i].EdgeName != xEdges[i].EdgeName)
                 {
                     return false;
                 }
-                
-                
-                if (!this.Equals(xEdges[i].Item2, yEdges[i].Item2))
+
+
+                if (!this.Equals(xEdges[i].Edge, yEdges[i].Edge))
                 {
                     return false;
                 }
@@ -188,12 +188,12 @@ namespace sones.GraphQL.Result
             
             for (int i = 0; i <= xProperties.Count; i++)
             {
-                if (xProperties[i].Item1 != xProperties[i].Item1)
+                if (xProperties[i].PropertyName != xProperties[i].PropertyName)
                 {
                     return false;
                 }
 
-                if (!xProperties[i].Item2.Equals(xProperties[i].Item2))
+                if (!xProperties[i].Property.Equals(xProperties[i].Property))
                 {
                     return false;
                 }

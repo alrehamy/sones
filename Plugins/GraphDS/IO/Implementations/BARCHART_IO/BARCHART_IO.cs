@@ -455,7 +455,7 @@ namespace sones.Plugins.GraphDS.IO
         /// </summary>
         /// <param name="properties">IEnumerable of properties to scan</param>
         /// <param name="barchart">reference to dictionary where found data should be added</param>
-        private void AnalyzeProperties(IEnumerable<Tuple<String, Object>> properties, ref Dictionary<String, object> barchart)
+        private void AnalyzeProperties(IEnumerable<PropertyViewContainer> properties, ref Dictionary<String, object> barchart)
         {
             String x = null;
             object y = 0;
@@ -464,18 +464,18 @@ namespace sones.Plugins.GraphDS.IO
 
             foreach (var property in properties)
             {
-                if ((property.Item1 != null) && (property.Item2 != null))
+                if ((property.PropertyName != null) && (property.Property != null))
                 {
-                    if ((property.Item1 is String) && (property.Item1.ToString().ToUpper() == "X"))
+                    if ((property.PropertyName is String) && (property.PropertyName.ToString().ToUpper() == "X"))
                     {
                         hasx = true;
-                        x = property.Item2.ToString();
+                        x = property.Property.ToString();
                     }
 
-                    if ((property.Item2 is object) && (property.Item1.ToString().ToUpper() == "Y"))
+                    if ((property.Property is object) && (property.PropertyName.ToString().ToUpper() == "Y"))
                     {
                         hasy = true;
-                        y = property.Item2;
+                        y = property.Property;
                     }
                 }
             }
@@ -491,11 +491,11 @@ namespace sones.Plugins.GraphDS.IO
         /// </summary>
         /// <param name="edges">IEnumerable of edges to be scanned</param>
         /// <param name="barchart">reference to dictionary where found data should be added</param>
-        private void AnalyzeEdges(IEnumerable<Tuple<String, IEdgeView>> edges, ref Dictionary<String, object> barchart)
+        private void AnalyzeEdges(IEnumerable<EdgeViewContainer> edges, ref Dictionary<String, object> barchart)
         {
-            foreach (Tuple<String, IEdgeView> edge in edges)
+            foreach (EdgeViewContainer edge in edges)
             {
-                AnalyzeTargetVertices(edge.Item2.GetTargetVertices(), ref barchart);
+                AnalyzeTargetVertices(edge.Edge.GetTargetVertices(), ref barchart);
             }
         }
 

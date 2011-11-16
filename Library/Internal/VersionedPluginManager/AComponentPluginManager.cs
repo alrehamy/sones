@@ -210,10 +210,7 @@ namespace sones.Library.VersionedPluginManager
         {
             var type = typeof(T);
 
-            var uniqueString = String.Join("-",
-                typeof(T).Name,
-                myPluginName,
-                (UniqueID == null) ? Guid.NewGuid().ToString() : UniqueID.ToString());
+            var uniqueString = String.Join("-", new String[3] {typeof(T).Name, myPluginName, (UniqueID == null) ? Guid.NewGuid().ToString() : UniqueID.ToString()} );
 
             var plugin = GetPlugin(myPluginName, type).InitializePlugin(uniqueString, myParameter);
 

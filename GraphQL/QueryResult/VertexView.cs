@@ -71,28 +71,28 @@ namespace sones.GraphQL.Result
                 return _edgeList.ContainsKey(myEdgePropertyName);
         }
 
-        public IEnumerable<Tuple<string, IEdgeView>> GetAllEdges()
+        public IEnumerable<EdgeViewContainer> GetAllEdges()
         {
             if (_edgeList == null)
-                return new List<Tuple<string, IEdgeView>>();
+                return new List<EdgeViewContainer>();
             else
-                return _edgeList.Select(item => new Tuple<String, IEdgeView>(item.Key, item.Value));
+                return _edgeList.Select(item => new EdgeViewContainer { EdgeName = item.Key, Edge = item.Value });
         }
 
-        public IEnumerable<Tuple<string, IHyperEdgeView>> GetAllHyperEdges()
+        public IEnumerable<HyperEdgeViewContainer> GetAllHyperEdges()
         {
             if (_edgeList == null)
-                return new List<Tuple<string, IHyperEdgeView>>();
+                return new List<HyperEdgeViewContainer>();
             else
-                return _edgeList.Where(item => item.Value is IHyperEdgeView).Select(item => new Tuple<String, IHyperEdgeView>(item.Key, (IHyperEdgeView)item.Value));
+                return _edgeList.Where(item => item.Value is IHyperEdgeView).Select(item => new HyperEdgeViewContainer { EdgeName = item.Key, Edge = (IHyperEdgeView)item.Value });
         }
 
-        public IEnumerable<Tuple<string, ISingleEdgeView>> GetAllSingleEdges()
+        public IEnumerable<SingleEdgeViewContainer> GetAllSingleEdges()
         {
             if (_edgeList == null)
-                return new List<Tuple<string, ISingleEdgeView>>();
+                return new List<SingleEdgeViewContainer>();
             else
-                return _edgeList.Where(item => item.Value is ISingleEdgeView).Select(item => new Tuple<String, ISingleEdgeView>(item.Key, (ISingleEdgeView)item.Value));
+                return _edgeList.Where(item => item.Value is ISingleEdgeView).Select(item => new SingleEdgeViewContainer { EdgeName = item.Key, Edge = (ISingleEdgeView)item.Value });
         }
 
         public IEdgeView GetEdge(string myEdgePropertyName)
@@ -141,12 +141,12 @@ namespace sones.GraphQL.Result
             return GetProperty<Stream>(myPropertyName);
         }
 
-        public IEnumerable<Tuple<string, Stream>> GetAllBinaryProperties()
+        public IEnumerable<BinaryPropertyViewContainer> GetAllBinaryProperties()
         {
             if (_propertyList == null)
-                return new List<Tuple<string, Stream>>();
+                return new List<BinaryPropertyViewContainer>();
             else
-                return _propertyList.Where(item => item.Value is Stream).Select(item => new Tuple<String, Stream>(item.Key, (Stream)item.Value));
+                return _propertyList.Where(item => item.Value is Stream).Select(item => new BinaryPropertyViewContainer { PropertyName = item.Key, BinaryPropery = (Stream)item.Value });
         }
 
         public T GetProperty<T>(string myPropertyName)
@@ -180,12 +180,12 @@ namespace sones.GraphQL.Result
                 return _propertyList.Count;
         }
 
-        public IEnumerable<Tuple<string, object>> GetAllProperties()
+        public IEnumerable<PropertyViewContainer> GetAllProperties()
         {
             if (_propertyList == null)
-                return new List<Tuple<string, object>>();
+                return new List<PropertyViewContainer>();
             else
-                return _propertyList.Select(item => new Tuple<string, object>(item.Key, item.Value));
+                return _propertyList.Select(item => new PropertyViewContainer { PropertyName = item.Key, Property = item.Value });
         }
 
         public string GetPropertyAsString(string myPropertyName)

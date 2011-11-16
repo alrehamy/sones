@@ -44,7 +44,7 @@ namespace sones.GraphDB.ErrorHandling
         {
             TypeNames = myTypeNames;
 
-            _msg = string.Format("The following types contains a circle in the derivation hierarchy ({0})", string.Join(",", myTypeNames.Select(t => t.TypeName)));
+            _msg = string.Format("The following types contains a circle in the derivation hierarchy ({0})", string.Join(",", myTypeNames.Select(t => t.TypeName).ToArray()));
         }
 
     }

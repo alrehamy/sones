@@ -396,11 +396,11 @@ namespace sones.GraphFS
 
                         foreach (var incommingVertices in vertex.GetAllIncomingVertices())
                         {
-                            foreach (InMemoryVertex sVertex in incommingVertices.Item3)
+                            foreach (InMemoryVertex sVertex in incommingVertices.IncomingVertices)
                             {
                                 lock (sVertex)
                                 {
-                                    var edge = sVertex.OutgoingEdges[incommingVertices.Item2];
+                                    var edge = sVertex.OutgoingEdges[incommingVertices.EdgePropertyID];
 
                                     if (edge is IHyperEdge)
                                     {
@@ -414,7 +414,7 @@ namespace sones.GraphFS
                                     }
                                     else
                                     {
-                                        sVertex.OutgoingEdges.Remove(incommingVertices.Item2);
+                                        sVertex.OutgoingEdges.Remove(incommingVertices.EdgePropertyID);
                                     }
                                 }
                             }
@@ -427,15 +427,15 @@ namespace sones.GraphFS
                         foreach (var aOutgoingEdge in vertex.GetAllOutgoingEdges())
                         {
 
-                            foreach (InMemoryVertex aTargetVertex in aOutgoingEdge.Item2.GetTargetVertices())
+                            foreach (InMemoryVertex aTargetVertex in aOutgoingEdge.Edge.GetTargetVertices())
                             {
                                 lock (aTargetVertex)
                                 {
-                                    aTargetVertex.IncomingEdges[vertex.VertexTypeID][aOutgoingEdge.Item1].RemoveVertex(vertex);
+                                    aTargetVertex.IncomingEdges[vertex.VertexTypeID][aOutgoingEdge.PropertyID].RemoveVertex(vertex);
 
-                                    if (aTargetVertex.IncomingEdges[vertex.VertexTypeID][aOutgoingEdge.Item1].Count() == 0)
+                                    if (aTargetVertex.IncomingEdges[vertex.VertexTypeID][aOutgoingEdge.PropertyID].Count() == 0)
                                     {
-                                        aTargetVertex.IncomingEdges[vertex.VertexTypeID].Remove(aOutgoingEdge.Item1);
+                                        aTargetVertex.IncomingEdges[vertex.VertexTypeID].Remove(aOutgoingEdge.PropertyID);
                                     }
 
                                     if (aTargetVertex.IncomingEdges[vertex.VertexTypeID].Count() == 0)

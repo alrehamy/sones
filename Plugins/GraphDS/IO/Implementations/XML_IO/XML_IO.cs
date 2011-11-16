@@ -147,18 +147,18 @@ namespace sones.Plugins.GraphDS.IO.XML_IO
                 {
                     var property = new Property();
 
-                    property.ID = aProperty.Item1;
+                    property.ID = aProperty.PropertyName;
 
-                    if (aProperty.Item2 != null)
+                    if (aProperty.Property != null)
                     {
-                        if (aProperty.Item2 is ICollectionWrapper)
+                        if (aProperty.Property is ICollectionWrapper)
                         {
-                            HandleListProperties((ICollectionWrapper)aProperty.Item2, ref property);
+                            HandleListProperties((ICollectionWrapper)aProperty.Property, ref property);
                         }
                         else
                         {
-                            property.Value = aProperty.Item2.ToString();
-                            property.Type = aProperty.Item2.GetType().Name;
+                            property.Value = aProperty.Property.ToString();
+                            property.Type = aProperty.Property.GetType().Name;
                         }
                         
                     }
@@ -183,9 +183,9 @@ namespace sones.Plugins.GraphDS.IO.XML_IO
                 {
                     var binProp = new BinaryData();
 
-                    binProp.ID = aProperty.Item1;
-                    var content = new byte[aProperty.Item2.Length];
-                    aProperty.Item2.Read(content, 0, content.Length);
+                    binProp.ID = aProperty.PropertyName;
+                    var content = new byte[aProperty.BinaryPropery.Length];
+                    aProperty.BinaryPropery.Read(content, 0, content.Length);
 
                     binProp.Content = content;
 
@@ -202,41 +202,41 @@ namespace sones.Plugins.GraphDS.IO.XML_IO
 
                 foreach (var aEdge in aVertex.GetAllEdges())
                 {
-                    if (aEdge.Item2 is IHyperEdgeView)
+                    if (aEdge.Edge is IHyperEdgeView)
                     {
-                        List<Tuple<SchemaToClassesGenerator.VertexView, IEnumerable<Tuple<String, Object>>>> innerVertices = new List<Tuple<SchemaToClassesGenerator.VertexView, IEnumerable<Tuple<String, Object>>>>();
+                        List<Tuple<SchemaToClassesGenerator.VertexView, IEnumerable<PropertyViewContainer>>> innerVertices = new List<Tuple<SchemaToClassesGenerator.VertexView, IEnumerable<PropertyViewContainer>>>();
 
                         #region single edges
 
-                        foreach (var SingleEdges in ((sones.GraphQL.Result.HyperEdgeView)aEdge.Item2).GetAllEdges())
+                        foreach (var SingleEdges in ((sones.GraphQL.Result.HyperEdgeView)aEdge.Edge).GetAllEdges())
                         {
-                            innerVertices.Add(new Tuple<SchemaToClassesGenerator.VertexView, IEnumerable<Tuple<String, Object>>>(GenerateVertexView(SingleEdges.GetTargetVertex()), SingleEdges.GetAllProperties()));
+                            innerVertices.Add(new Tuple<SchemaToClassesGenerator.VertexView, IEnumerable<PropertyViewContainer>>(GenerateVertexView(SingleEdges.GetTargetVertex()), SingleEdges.GetAllProperties()));
                         }
 
                         #endregion
 
                         var hyperEdge = new SchemaToClassesGenerator.HyperEdgeView();
 
-                        hyperEdge.Name = aEdge.Item1;
+                        hyperEdge.Name = aEdge.EdgeName;
 
                         #region set hyperedge properties
 
-                        var edgeProperties = aEdge.Item2.GetAllProperties().ToArray();
+                        var edgeProperties = aEdge.Edge.GetAllProperties().ToArray();
                         hyperEdge.Properties = new Property[edgeProperties.Count()];
 
                         for (Int32 i = 0; i < edgeProperties.Count(); i++)
                         {
                             hyperEdge.Properties[i] = new Property();
-                            hyperEdge.Properties[i].ID = edgeProperties[i].Item1;
+                            hyperEdge.Properties[i].ID = edgeProperties[i].PropertyName;
 
-                            if (edgeProperties[i].Item2 is ICollectionWrapper)
+                            if (edgeProperties[i].Property is ICollectionWrapper)
                             {
-                                HandleListProperties((ICollectionWrapper)edgeProperties[i].Item2, ref hyperEdge.Properties[i]);
+                                HandleListProperties((ICollectionWrapper)edgeProperties[i].Property, ref hyperEdge.Properties[i]);
                             }
                             else
                             {
-                                hyperEdge.Properties[i].Type = edgeProperties[i].Item2.GetType().Name;
-                                hyperEdge.Properties[i].Value = edgeProperties[i].Item2.ToString();
+                                hyperEdge.Properties[i].Type = edgeProperties[i].Property.GetType().Name;
+                                hyperEdge.Properties[i].Value = edgeProperties[i].Property.ToString();
                             }
                         }
 
@@ -256,16 +256,16 @@ namespace sones.Plugins.GraphDS.IO.XML_IO
                             for (Int32 j = 0; j < SingleEdgesProperties.Count(); j++)
                             {
                                 hyperEdge.SingleEdge[i].Properties[j] = new Property();
-                                hyperEdge.SingleEdge[i].Properties[j].ID = SingleEdgesProperties[j].Item1;
+                                hyperEdge.SingleEdge[i].Properties[j].ID = SingleEdgesProperties[j].PropertyName;
 
-                                if (SingleEdgesProperties[j].Item2 is ICollectionWrapper)
+                                if (SingleEdgesProperties[j].Property is ICollectionWrapper)
                                 {
-                                    HandleListProperties((ICollectionWrapper)SingleEdgesProperties[j].Item2, ref hyperEdge.SingleEdge[i].Properties[j]);
+                                    HandleListProperties((ICollectionWrapper)SingleEdgesProperties[j].Property, ref hyperEdge.SingleEdge[i].Properties[j]);
                                 }
                                 else
                                 {
-                                    hyperEdge.SingleEdge[i].Properties[j].Type = SingleEdgesProperties[j].Item2.GetType().Name;
-                                    hyperEdge.SingleEdge[i].Properties[j].Value = SingleEdgesProperties[j].Item2.ToString();
+                                    hyperEdge.SingleEdge[i].Properties[j].Type = SingleEdgesProperties[j].Property.GetType().Name;
+                                    hyperEdge.SingleEdge[i].Properties[j].Value = SingleEdgesProperties[j].Property.ToString();
                                 }
                             }
 
@@ -300,9 +300,9 @@ namespace sones.Plugins.GraphDS.IO.XML_IO
                     {
                         var SingleEdges = new SchemaToClassesGenerator.SingleEdgeView();
 
-                        SingleEdges.Name = aEdge.Item1;
+                        SingleEdges.Name = aEdge.EdgeName;
 
-                        var edgeProperties = aEdge.Item2.GetAllProperties().ToArray();
+                        var edgeProperties = aEdge.Edge.GetAllProperties().ToArray();
 
                         #region properties
 
@@ -311,16 +311,16 @@ namespace sones.Plugins.GraphDS.IO.XML_IO
                         for (Int32 i = 0; i < edgeProperties.Count(); i++)
                         {
                             SingleEdges.Properties[i] = new Property();
-                            SingleEdges.Properties[i].ID = edgeProperties[i].Item1;
+                            SingleEdges.Properties[i].ID = edgeProperties[i].PropertyName;
 
-                            if (edgeProperties[i].Item2 is ICollectionWrapper)
+                            if (edgeProperties[i].Property is ICollectionWrapper)
                             {
-                                HandleListProperties((ICollectionWrapper)edgeProperties[i].Item2, ref SingleEdges.Properties[i]);
+                                HandleListProperties((ICollectionWrapper)edgeProperties[i].Property, ref SingleEdges.Properties[i]);
                             }
                             else
                             {
-                                SingleEdges.Properties[i].Type = edgeProperties[i].Item2.GetType().Name;
-                                SingleEdges.Properties[i].Value = edgeProperties[i].Item2.ToString();
+                                SingleEdges.Properties[i].Type = edgeProperties[i].Property.GetType().Name;
+                                SingleEdges.Properties[i].Value = edgeProperties[i].Property.ToString();
                             }
                         }
 
@@ -330,7 +330,7 @@ namespace sones.Plugins.GraphDS.IO.XML_IO
 
                         SingleEdges.TargetVertex = new SchemaToClassesGenerator.VertexView();
                         
-                        var edgeTargetVertex = ((sones.GraphQL.Result.SingleEdgeView)aEdge.Item2).GetTargetVertex();
+                        var edgeTargetVertex = ((sones.GraphQL.Result.SingleEdgeView)aEdge.Edge).GetTargetVertex();
 
                         var targetVertex = GenerateVertexView(edgeTargetVertex);
 

@@ -179,7 +179,7 @@ namespace sones.GraphDB.AdditionalVertices
             return _Vertex.HasIncomingVertices(myVertexTypeID, myEdgePropertyID);
         }
 
-        public IEnumerable<Tuple<long, long, IEnumerable<IVertex>>> GetAllIncomingVertices(
+        public IEnumerable<IncomingVerticesContainer> GetAllIncomingVertices(
             PropertyHyperGraphFilter.IncomingVerticesFilter myFilter)
         {
             return _Vertex.GetAllIncomingVertices(myFilter);
@@ -195,19 +195,19 @@ namespace sones.GraphDB.AdditionalVertices
             return _Vertex.HasOutgoingEdge(myEdgePropertyID);
         }
 
-        public IEnumerable<Tuple<long, IEdge>> GetAllOutgoingEdges(
+        public IEnumerable<EdgeContainer> GetAllOutgoingEdges(
             PropertyHyperGraphFilter.OutgoingEdgeFilter myFilter)
         {
             return _Vertex.GetAllOutgoingEdges(myFilter);
         }
 
-        public IEnumerable<Tuple<long, IHyperEdge>> GetAllOutgoingHyperEdges(
+        public IEnumerable<HyperEdgeContainer> GetAllOutgoingHyperEdges(
             PropertyHyperGraphFilter.OutgoingHyperEdgeFilter myFilter)
         {
             return _Vertex.GetAllOutgoingHyperEdges(myFilter);
         }
 
-        public IEnumerable<Tuple<long, ISingleEdge>> GetAllOutgoingSingleEdges(
+        public IEnumerable<SingleEdgeContainer> GetAllOutgoingSingleEdges(
             PropertyHyperGraphFilter.OutgoingSingleEdgeFilter myFilter)
         {
             return _Vertex.GetAllOutgoingSingleEdges(myFilter);
@@ -233,7 +233,7 @@ namespace sones.GraphDB.AdditionalVertices
             return _Vertex.GetBinaryProperty(myPropertyID);
         }
 
-        public IEnumerable<Tuple<long, System.IO.Stream>> GetAllBinaryProperties(
+        public IEnumerable<BinaryPropertyContainer> GetAllBinaryProperties(
             PropertyHyperGraphFilter.BinaryPropertyFilter myFilter)
         {
             return _Vertex.GetAllBinaryProperties(myFilter);
@@ -259,7 +259,7 @@ namespace sones.GraphDB.AdditionalVertices
             return _Vertex.GetCountOfProperties();
         }
 
-        public IEnumerable<Tuple<long, IComparable>> GetAllProperties(
+        public IEnumerable<PropertyContainer> GetAllProperties(
             PropertyHyperGraphFilter.GraphElementStructuredPropertyFilter myFilter)
         {
             return _Vertex.GetAllProperties(myFilter);
@@ -285,7 +285,7 @@ namespace sones.GraphDB.AdditionalVertices
             return _Vertex.GetCountOfUnstructuredProperties();
         }
 
-        public IEnumerable<Tuple<string, object>> GetAllUnstructuredProperties(
+        public IEnumerable<UnstructuredPropertyContainer> GetAllUnstructuredProperties(
             PropertyHyperGraphFilter.GraphElementUnStructuredPropertyFilter myFilter)
         {
             return _Vertex.GetAllUnstructuredProperties(myFilter);

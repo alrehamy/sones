@@ -286,7 +286,7 @@ namespace sones.GraphDB.Manager.TypeManagement
 
                     foreach (var property in vertex.GetAllUnstructuredProperties())
                     {
-                        if (property.Item1.CompareTo(aAttribute.AttributeName) == 0)
+                        if (property.PropertyName.CompareTo(aAttribute.AttributeName) == 0)
                         {
                             bFound = true;
 
@@ -297,20 +297,20 @@ namespace sones.GraphDB.Manager.TypeManagement
                             // Try Convert Type
                             try
                             {
-                                value = property.Item2.ConvertToIComparable(targettype);
+                                value = property.Property.ConvertToIComparable(targettype);
                             }
                             catch (InvalidCastException)
                             {
-                                throw new VertexAttributeCastException(aAttribute.AttributeName, property.Item2.GetType(), targettype, false);
+                                throw new VertexAttributeCastException(aAttribute.AttributeName, property.Property.GetType(), targettype, false);
                             }
                             catch (FormatException)
                             {
-                                throw new VertexAttributeCastException(aAttribute.AttributeName, property.Item2.GetType(), targettype, true);
+                                throw new VertexAttributeCastException(aAttribute.AttributeName, property.Property.GetType(), targettype, true);
                             }
 
                             // add list with only one item -> unstructured property to delete
                             var unstructdel = new List<string>();
-                            unstructdel.Add(property.Item1);
+                            unstructdel.Add(property.PropertyName);
                             UnstructuredPropertiesUpdate propdelete = new UnstructuredPropertiesUpdate(null, unstructdel);
 
                             // add list with only one item -> structured property to add
@@ -440,7 +440,7 @@ namespace sones.GraphDB.Manager.TypeManagement
                 {
                     foreach (var property in vertex.GetAllProperties())
                     {
-                        if (property.Item1 == propertyDefinition.ID)
+                        if (property.PropertyID == propertyDefinition.ID)
                         {
                             // The property is set on this vertex
                             string value = null;
@@ -448,15 +448,15 @@ namespace sones.GraphDB.Manager.TypeManagement
                             // Try Convert Type
                             try
                             {
-                                value = Convert.ToString(property.Item2);
+                                value = Convert.ToString(property.Property);
                             }
                             catch (InvalidCastException)
                             {
-                                throw new VertexAttributeCastException(aProperty, property.Item2.GetType(), typeof(String), false);
+                                throw new VertexAttributeCastException(aProperty, property.Property.GetType(), typeof(String), false);
                             }
                             catch (FormatException)
                             {
-                                throw new VertexAttributeCastException(aProperty, property.Item2.GetType(), typeof(String), true);
+                                throw new VertexAttributeCastException(aProperty, property.Property.GetType(), typeof(String), true);
                             }
 
                             // list with only ony entry -> the structured property to delete

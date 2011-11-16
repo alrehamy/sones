@@ -56,7 +56,7 @@ namespace sones.GraphDB.Expression
         /// Creates a new collection literal using a set
         /// </summary>
         /// <param name="myCollection">The ISet collection</param>
-        public CollectionLiteralExpression(ISet<IComparable> myCollection)
+        public CollectionLiteralExpression(HashSet<IComparable> myCollection)
         {
             CollectionLiteral = new SetCollectionWrapper(myCollection);
         }

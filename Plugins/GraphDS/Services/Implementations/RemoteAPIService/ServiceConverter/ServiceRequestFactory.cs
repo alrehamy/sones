@@ -188,7 +188,7 @@ namespace sones.GraphDS.Services.RemoteAPIService.ServiceConverter
 
         public static RequestCreateEdgeTypes MakeRequestCreateEdgeTypes(IEnumerable<ServiceEdgeTypePredefinition> myEdgeTypePredefinition)
         {
-            return new RequestCreateEdgeTypes(myEdgeTypePredefinition.Select(x => x.ToEdgeTypePredefinition()));
+            return new RequestCreateEdgeTypes(myEdgeTypePredefinition.Select(x => (ATypePredefinition)x.ToEdgeTypePredefinition()));
         }
         
         public static RequestCreateIndex MakeRequestCreateIndex(ServiceIndexPredefinition myIndexPreDef)

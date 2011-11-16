@@ -163,26 +163,26 @@ namespace sones.Plugins.GraphDS.IO
             {
                 foreach (var _property in aVertex.GetAllProperties())
                 {
-                    if (_property.Item2 == null)
+                    if (_property.Property == null)
                     {
-                        Output.AppendLine(Header + _property.Item1);
+                        Output.AppendLine(Header + _property.PropertyName);
                     }
                     else
                     {
-                        if (_property.Item2 is Stream)
+                        if (_property.Property is Stream)
                         {
-                            Output.AppendLine(Header + _property.Item1 + "\t BinaryProperty");
+                            Output.AppendLine(Header + _property.PropertyName + "\t BinaryProperty");
                         }
                         else
                         {
-                            if (_property.Item2 is ICollectionWrapper)
+                            if (_property.Property is ICollectionWrapper)
                             {
-                                Output.AppendLine(Header + _property.Item1);
-                                HandleListProperties((ICollectionWrapper)_property.Item2, Header, ref Output);
+                                Output.AppendLine(Header + _property.PropertyName);
+                                HandleListProperties((ICollectionWrapper)_property.Property, Header, ref Output);
                             }
                             else
                             {
-                                Output.AppendLine(Header + _property.Item1 + "\t " + _property.Item2.ToString());
+                                Output.AppendLine(Header + _property.PropertyName + "\t " + _property.Property.ToString());
                             }
                         }
                     }
@@ -197,14 +197,14 @@ namespace sones.Plugins.GraphDS.IO
 
             foreach (var _edge in aVertex.GetAllEdges())
             {
-                if (_edge.Item2 == null)
+                if (_edge.Edge == null)
                 {
-                    Output.AppendLine(Header+"\t\t"+_edge.Item1);
+                    Output.AppendLine(Header+"\t\t"+_edge.EdgeName);
                 }
                 else
                 {
-                    Output.AppendLine(Header+"\t\t"+_edge.Item2.GetType().Name);
-                    Output.AppendLine(Header+"\t\t"+_edge.Item1).Append(GenerateEdgeViewText(Header+"\t\t\t",_edge.Item2));
+                    Output.AppendLine(Header+"\t\t"+_edge.Edge.GetType().Name);
+                    Output.AppendLine(Header+"\t\t"+_edge.EdgeName).Append(GenerateEdgeViewText(Header+"\t\t\t",_edge.Edge));
                 }
             }
 
@@ -247,28 +247,28 @@ namespace sones.Plugins.GraphDS.IO
             {
                 foreach (var _property in aEdge.GetAllProperties())
                 {
-                    if (_property.Item2 == null)
+                    if (_property.Property == null)
                     {
-                        Output.AppendLine(Header + "\t\t" + _property.Item1);
+                        Output.AppendLine(Header + "\t\t" + _property.Property);
                     }
                     else
                     {
-                        if (_property.Item2 is Stream)
+                        if (_property.Property is Stream)
                         {
-                            Output.AppendLine(Header + "\t\t" + _property.Item1 + "\t BinaryProperty");
+                            Output.AppendLine(Header + "\t\t" + _property.Property + "\t BinaryProperty");
                         }
                         else
                         {
-                            if (_property.Item2 is ICollectionWrapper)
+                            if (_property.Property is ICollectionWrapper)
                             {
                                 var prefix = Header + "\t\t";
-                                Output.AppendLine(prefix + _property.Item1 + "\t");
+                                Output.AppendLine(prefix + _property.Property + "\t");
                                 
-                                HandleListProperties((ICollectionWrapper)_property.Item2, prefix, ref Output);
+                                HandleListProperties((ICollectionWrapper)_property.Property, prefix, ref Output);
                             }
                             else
                             {
-                                Output.AppendLine(Header + "\t\t" + _property.Item1 + "\t " + _property.Item2.ToString());
+                                Output.AppendLine(Header + "\t\t" + _property.Property + "\t " + _property.Property.ToString());
                             }
                         }
                     }
@@ -285,29 +285,29 @@ namespace sones.Plugins.GraphDS.IO
                     Output.AppendLine(Header + "\t\t\tProperties");
                     foreach (var _property in singleEdge.GetAllProperties())
                     {
-                        if (_property.Item2 == null)
+                        if (_property.Property == null)
                         {
-                            Output.AppendLine(Header + "\t\t\t\t " + _property.Item1);
+                            Output.AppendLine(Header + "\t\t\t\t " + _property.PropertyName);
                         }
                         else
                         {
-                            if (_property.Item2 is Stream)
+                            if (_property.Property is Stream)
                             {
-                                Output.AppendLine(Header + "\t\t\t\t " + _property.Item1 + "\t\t\t BinaryProperty");
+                                Output.AppendLine(Header + "\t\t\t\t " + _property.PropertyName + "\t\t\t BinaryProperty");
                             }
                             else
                             {
-                                if (_property.Item2 is ICollectionWrapper)
+                                if (_property.Property is ICollectionWrapper)
                                 {
                                     var prefix = Header + "\t\t";
 
-                                    Output.AppendLine(Header + "\t\t\t\t " + _property.Item1);
+                                    Output.AppendLine(Header + "\t\t\t\t " + _property.PropertyName);
 
-                                    HandleListProperties((ICollectionWrapper)_property.Item2, prefix + "\t\t\t\t", ref Output);
+                                    HandleListProperties((ICollectionWrapper)_property.Property, prefix + "\t\t\t\t", ref Output);
                                 }
                                 else
                                 {
-                                    Output.AppendLine(Header + "\t\t\t\t " + _property.Item1 + "\t\t " + _property.Item2.ToString());
+                                    Output.AppendLine(Header + "\t\t\t\t " + _property.PropertyName + "\t\t " + _property.Property.ToString());
                                 }
                             }
                         }

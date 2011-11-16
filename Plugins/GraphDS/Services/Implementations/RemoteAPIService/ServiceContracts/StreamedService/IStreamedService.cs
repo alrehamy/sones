@@ -53,7 +53,7 @@ namespace sones.GraphDS.Services.RemoteAPIService.ServiceContracts.StreamedServi
         /// <param name="myFilter">A function to filter the binary properties</param> 
         /// <returns>An IEnumerable of PropertyID/stream KVP</returns>
         [OperationContract]
-        List<Tuple<Int64, Stream>> GetAllBinaryProperties(SecurityToken mySecurityToken, Int64 myTransToken, ServiceVertexInstance myVertex);
+        List<ServiceBinaryPropertyContainer> GetAllBinaryProperties(SecurityToken mySecurityToken, Int64 myTransToken, ServiceVertexInstance myVertex);
 
         [OperationContract]
         void SetBinaryProperty(SetBinaryPropertyMessage myMessage);

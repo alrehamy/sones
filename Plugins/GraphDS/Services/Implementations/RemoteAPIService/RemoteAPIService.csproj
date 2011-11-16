@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>sones.GraphDS.Services.RemoteAPIService</RootNamespace>
     <AssemblyName>RemoteAPIService</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,7 +42,6 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -50,6 +50,10 @@
     <Compile Include="DataContracts\ChangesetObjects\ServiceAlterVertexChangeset.cs" />
     <Compile Include="DataContracts\ChangesetObjects\ServiceUpdateChangeset.cs" />
     <Compile Include="DataContracts\InstanceObjects\AGraphElement.cs" />
+    <Compile Include="DataContracts\InstanceObjects\ServiceBinaryPropertyContainer.cs" />
+    <Compile Include="DataContracts\InstanceObjects\ServiceUnstructuredPropertyContainer.cs" />
+    <Compile Include="DataContracts\InstanceObjects\ServicePropertyContainer.cs" />
+    <Compile Include="DataContracts\InstanceObjects\ServiceIncomingVerticesContainer.cs" />
     <Compile Include="DataContracts\InstanceObjects\ServiceEdgeInstance.cs" />
     <Compile Include="DataContracts\InstanceObjects\ServiceHyperEdgeInstance.cs" />
     <Compile Include="DataContracts\InstanceObjects\ServiceSingleEdgeInstance.cs" />

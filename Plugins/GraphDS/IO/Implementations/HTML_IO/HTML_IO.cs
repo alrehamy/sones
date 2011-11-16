@@ -158,13 +158,13 @@ namespace sones.Plugins.GraphDS.IO
                 //Output.Append("<table class=\"gql_table\" border=\"1\"> <!-- VertexProperties -->");
                 foreach (var _property in aVertex.GetAllProperties())
                 {
-                    if (_property.Item2 == null)
-                        Output.Append("<tr><td style=\"width:250px\">").Append(EscapeForXMLandHTML(_property.Item1)).Append("</td><td style=\"width:400px\"></td></tr>");
+                    if (_property.Property == null)
+                        Output.Append("<tr><td style=\"width:250px\">").Append(EscapeForXMLandHTML(_property.PropertyName)).Append("</td><td style=\"width:400px\"></td></tr>");
                     else
-                        if (_property.Item2 is Stream)
-                            Output.Append("<tr><td style=\"width:250px\">").Append(EscapeForXMLandHTML(_property.Item1)).Append("</td><td style=\"width:400px\">BinaryProperty</td></tr>");
+                        if (_property.Property is Stream)
+                            Output.Append("<tr><td style=\"width:250px\">").Append(EscapeForXMLandHTML(_property.PropertyName)).Append("</td><td style=\"width:400px\">BinaryProperty</td></tr>");
                         else
-                            Output.Append("<tr><td style=\"width:250px\">").Append(EscapeForXMLandHTML(_property.Item1)).Append("</td><td style=\"width:400px\">").Append(EscapeForXMLandHTML(_property.Item2.ToString())).Append("</td></tr>");
+                            Output.Append("<tr><td style=\"width:250px\">").Append(EscapeForXMLandHTML(_property.PropertyName)).Append("</td><td style=\"width:400px\">").Append(EscapeForXMLandHTML(_property.Property.ToString())).Append("</td></tr>");
                 }
                 //Output.Append("</table> <!-- VertexProperties -->");
             }
@@ -176,13 +176,13 @@ namespace sones.Plugins.GraphDS.IO
 
             foreach (var _edge in aVertex.GetAllEdges())
             {
-                if (_edge.Item2 == null)
+                if (_edge.Edge == null)
                 {
-                    Output.Append("<tr><td style=\"width:250px\">").Append(EscapeForXMLandHTML(_edge.Item1)).Append("</td><td style=\"width:400px\"></td></tr>");
+                    Output.Append("<tr><td style=\"width:250px\">").Append(EscapeForXMLandHTML(_edge.EdgeName)).Append("</td><td style=\"width:400px\"></td></tr>");
                 }
                 else
                 {
-                    Output.Append("<tr><td style=\"width:250px\">").Append(EscapeForXMLandHTML(_edge.Item1)).Append("</td><td style=\"width:400px\">").Append(GenerateEdgeViewHTML(_edge.Item2)).Append("</td></tr>");
+                    Output.Append("<tr><td style=\"width:250px\">").Append(EscapeForXMLandHTML(_edge.EdgeName)).Append("</td><td style=\"width:400px\">").Append(GenerateEdgeViewHTML(_edge.Edge)).Append("</td></tr>");
                 }
             }
 
@@ -208,15 +208,15 @@ namespace sones.Plugins.GraphDS.IO
 
                 foreach (var _property in aEdge.GetAllProperties())
                 {
-                    if (_property.Item2 == null)
-                        Output.Append(EscapeForXMLandHTML(_property.Item1)).Append("</td><td style=\"width:400px\"></td></tr>");
+                    if (_property.Property == null)
+                        Output.Append(EscapeForXMLandHTML(_property.PropertyName)).Append("</td><td style=\"width:400px\"></td></tr>");
                     else
-                        if (_property.Item2 is Stream)
+                        if (_property.Property is Stream)
                         {
-                            Output.Append(EscapeForXMLandHTML(_property.Item1)).Append("</td><td style=\"width:400px\">BinaryProperty</td></tr>");
+                            Output.Append(EscapeForXMLandHTML(_property.PropertyName)).Append("</td><td style=\"width:400px\">BinaryProperty</td></tr>");
                         }
                         else
-                            Output.Append(EscapeForXMLandHTML(_property.Item1)).Append("</td><td style=\"width:400px\">").Append(EscapeForXMLandHTML(_property.Item2.ToString())).Append("</td></tr>");
+                            Output.Append(EscapeForXMLandHTML(_property.PropertyName)).Append("</td><td style=\"width:400px\">").Append(EscapeForXMLandHTML(_property.Property.ToString())).Append("</td></tr>");
                 }
 
                 Output.Append("</table></td></tr> <!-- EdgeViewProperties -->");

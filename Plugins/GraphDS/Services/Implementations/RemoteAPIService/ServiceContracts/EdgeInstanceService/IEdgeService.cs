@@ -45,7 +45,7 @@ namespace sones.GraphDS.Services.RemoteAPIService.ServiceContracts.EdgeInstanceS
         /// <param name="myFilter">A function to filter properties</param>
         /// <returns>An IEnumerable of Property/Value</returns>
         [OperationContract(Name = "GetAllPropertiesByEdgeInstance")]
-        List<Tuple<Int64, object>> GetAllProperties(SecurityToken mySecurityToken, Int64 myTransToken, ServiceEdgeInstance myGraphElement);
+        List<ServicePropertyContainer> GetAllProperties(SecurityToken mySecurityToken, Int64 myTransToken, ServiceEdgeInstance myGraphElement);
 
         /// <summary>
         /// Returns a property as string
@@ -89,7 +89,7 @@ namespace sones.GraphDS.Services.RemoteAPIService.ServiceContracts.EdgeInstanceS
         /// <param name="myFilter">A function to filter properties</param>
         /// <returns>An IEnumerable of NameOfProperty/Value</returns>
         [OperationContract(Name = "GetAllUnstructuredPropertiesByEdgeInstance")]
-        List<Tuple<String, Object>> GetAllUnstructuredProperties(SecurityToken mySecurityToken, Int64 myTransToken, ServiceEdgeInstance myGraphElement);
+        List<ServiceUnstructuredPropertyContainer> GetAllUnstructuredProperties(SecurityToken mySecurityToken, Int64 myTransToken, ServiceEdgeInstance myGraphElement);
 
         /// <summary>
         /// Returns an unstructured property as string

@@ -43,19 +43,19 @@ namespace sones.GraphQL.Result
         /// Returns all edges
         /// </summary>
         /// <returns>An IEnumerable of all edges</returns>
-        IEnumerable<Tuple<String, IEdgeView>> GetAllEdges();
+        IEnumerable<EdgeViewContainer> GetAllEdges();
 
         /// <summary>
         /// Returns all hyper edges
         /// </summary>
         /// <returns>An IEnumerable of propertyName/hyper IncomingEdge KVP</returns>
-        IEnumerable<Tuple<String, IHyperEdgeView>> GetAllHyperEdges();
+        IEnumerable<HyperEdgeViewContainer> GetAllHyperEdges();
 
         /// <summary>
         /// Returns all single edges
         /// </summary>
         /// <returns>An IEnumerable of all single edges</returns>
-        IEnumerable<Tuple<String, ISingleEdgeView>> GetAllSingleEdges();
+        IEnumerable<SingleEdgeViewContainer> GetAllSingleEdges();
 
         /// <summary>
         /// Returns a specified edge
@@ -101,7 +101,7 @@ namespace sones.GraphQL.Result
         /// Returns all binary properties
         /// </summary>
         /// <returns>An IEnumerable of PropertyName/stream KVP</returns>
-        IEnumerable<Tuple<String, Stream>> GetAllBinaryProperties();
+        IEnumerable<BinaryPropertyViewContainer> GetAllBinaryProperties();
 
         #endregion
     }

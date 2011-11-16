@@ -1620,9 +1620,9 @@ namespace sones.Plugins.SonesGQL.XMLBulkImport
                 iSingleEdge.EdgeTypeID,
                 iSingleEdge.Comment,
                 new StructuredPropertiesUpdate(
-                    structuredProperties != null && structuredProperties.Count() > 0 ? structuredProperties.ToDictionary(key => key.Item1, value => value.Item2) : null),
+                    structuredProperties != null && structuredProperties.Count() > 0 ? structuredProperties.ToDictionary(key => key.PropertyID, value => value.Property) : null),
                 new UnstructuredPropertiesUpdate(
-                    unstructuredProperties != null && unstructuredProperties.Count() > 0 ? unstructuredProperties.ToDictionary(key => key.Item1, value => value.Item2) : null));
+                    unstructuredProperties != null && unstructuredProperties.Count() > 0 ? unstructuredProperties.ToDictionary(key => key.PropertyName, value => value.Property) : null));
         }
 
         private HyperEdgeUpdateDefinition CreateHyperEdgeUpdateDefinition(IHyperEdge iHyperEdge)
@@ -1633,9 +1633,9 @@ namespace sones.Plugins.SonesGQL.XMLBulkImport
 
             return new HyperEdgeUpdateDefinition(iHyperEdge.EdgeTypeID, iHyperEdge.Comment,
                 new StructuredPropertiesUpdate(
-                    structuredProperties != null && structuredProperties.Count() > 0 ? structuredProperties.ToDictionary(key => key.Item1, value => value.Item2) : null),
+                    structuredProperties != null && structuredProperties.Count() > 0 ? structuredProperties.ToDictionary(key => key.PropertyID, value => value.Property) : null),
                 new UnstructuredPropertiesUpdate(
-                    unstructuredProperties != null && unstructuredProperties.Count() > 0 ? unstructuredProperties.ToDictionary(key => key.Item1, value => value.Item2) : null),
+                    unstructuredProperties != null && unstructuredProperties.Count() > 0 ? unstructuredProperties.ToDictionary(key => key.PropertyName, value => value.Property) : null),
                 null,
                 containedEdges.Select(_ => CreateSingleEdgeUpdateDefinition(_)));
         }

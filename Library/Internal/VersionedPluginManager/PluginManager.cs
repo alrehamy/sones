@@ -32,27 +32,11 @@ namespace sones.Library.VersionedPluginManager
     {
         #region Data
 
-        #region struct ActivatorInfo
-
-        /// <summary>
-        /// Just a wrapper to hold some information about the plugin which is going to be activated.
-        /// </summary>
-        private struct ActivatorInfo
-        {
-            public Type Type { get; set; }
-            public Version MinVersion { get; set; }
-            public Version MaxVersion { get; set; }
-            public Object[] CtorArgs { get; set; }
-            public Func<Type, Object> ActivateDelegate { get; set; }
-        }
-
-        #endregion
-
         /// <summary>
         /// This will store the plugin inherit type and the Activator info containing the compatible version and a list of 
         /// valid plugin instances
         /// </summary>
-        private readonly Dictionary<Type, Tuple<ActivatorInfo, List<Object>>> _inheritTypeAndInstance;
+        private readonly Dictionary<Type, InstanceContainer> _inheritTypeAndInstance;
 
         /// <summary>
         /// The locations to search for plugins
@@ -102,7 +86,7 @@ namespace sones.Library.VersionedPluginManager
                 _lookupLocations = new[] {Environment.CurrentDirectory};
             }
 
-            _inheritTypeAndInstance = new Dictionary<Type, Tuple<ActivatorInfo, List<object>>>();
+            _inheritTypeAndInstance = new Dictionary<Type, InstanceContainer>();
         }
 
         #endregion
@@ -133,7 +117,7 @@ namespace sones.Library.VersionedPluginManager
                                         ActivateDelegate = myActivateDelegate
                                     };
             _inheritTypeAndInstance.Add(typeof (T1),
-                                        new Tuple<ActivatorInfo, List<object>>(activatorInfo, new List<object>()));
+                                        new InstanceContainer { Info = activatorInfo, Objects = new List<object>()});
 
             return this;
         }
@@ -191,7 +175,7 @@ namespace sones.Library.VersionedPluginManager
 
                 foreach (var kv in _inheritTypeAndInstance)
                 {
-                    _inheritTypeAndInstance[kv.Key].Item2.Clear();
+                    _inheritTypeAndInstance[kv.Key].Objects.Clear();
                 }
 
                 #endregion
@@ -213,7 +197,7 @@ namespace sones.Library.VersionedPluginManager
 
                 if (_inheritTypeAndInstance.ContainsKey(type))
                 {
-                    _inheritTypeAndInstance[type].Item2.Clear();
+                    _inheritTypeAndInstance[type].Objects.Clear();
                 }
                
                 #endregion
@@ -231,8 +215,7 @@ namespace sones.Library.VersionedPluginManager
 
             if (!Directory.Exists(myPath)) return;
 
-            IEnumerable<string> files = Directory.EnumerateFiles(myPath, "*.dll")
-                .Union(Directory.EnumerateFiles(myPath, "*.exe"));
+            IEnumerable<string> files = GetFilesForDirectory(myPath);
 
             #endregion
 
@@ -240,6 +223,14 @@ namespace sones.Library.VersionedPluginManager
             {
                 DiscoverFile<T>(myThrowExceptionOnIncompatibleVersion, myPublicOnly, file);
             }
+        }
+
+        private IEnumerable<string> GetFilesForDirectory(string myPath)
+        {
+            var dlls = Directory.GetFiles(myPath, "*.dll");
+            var exes = Directory.GetFiles(myPath, "*.exe");
+
+            return dlls.Union(exes);
         }
 
         private void DiscoverFile<T>(Boolean myThrowExceptionOnIncompatibleVersion, Boolean myPublicOnly, String myFile)
@@ -282,7 +273,7 @@ namespace sones.Library.VersionedPluginManager
                 //var matchingAssemblies = new List<Tuple<AssemblyName, AssemblyName>>();
                 foreach (AssemblyName assembly in loadedPluginAssembly.GetReferencedAssemblies())
                 {
-                    IEnumerable<KeyValuePair<Type, Tuple<ActivatorInfo, List<object>>>> matchings =
+                    IEnumerable<KeyValuePair<Type, InstanceContainer>> matchings =
                         _inheritTypeAndInstance.Where(kv => Assembly.GetAssembly(kv.Key).GetName().Name == assembly.Name);
 
                     if (matchings != null)
@@ -292,7 +283,7 @@ namespace sones.Library.VersionedPluginManager
                             //matchingAssemblies.Add(new Tuple<AssemblyName, AssemblyName>(Assembly.GetAssembly(matchAss.Key).GetName(), assembly));
 
                             CheckVersion(myThrowExceptionOnIncompatibleVersion, loadedPluginAssembly,
-                                         Assembly.GetAssembly(matchAss.Key).GetName(), assembly, matchAss.Value.Item1);
+                                         Assembly.GetAssembly(matchAss.Key).GetName(), assembly, matchAss.Value.Info);
                         }
                     }
                 }
@@ -381,7 +372,7 @@ namespace sones.Library.VersionedPluginManager
 
             foreach (var baseType in validBaseTypes)
             {
-                ActivatorInfo activatorInfo = _inheritTypeAndInstance[baseType.Key].Item1;
+                ActivatorInfo activatorInfo = _inheritTypeAndInstance[baseType.Key].Info;
 
                 #region Get baseTypeAssembly and plugin referenced assembly
 
@@ -422,7 +413,7 @@ namespace sones.Library.VersionedPluginManager
 
                         if (instance != null)
                         {
-                            _inheritTypeAndInstance[baseType.Key].Item2.Add(instance);
+                            _inheritTypeAndInstance[baseType.Key].Objects.Add(instance);
 
                             if (OnPluginFound != null)
                             {
@@ -448,8 +439,7 @@ namespace sones.Library.VersionedPluginManager
 
             if (!Directory.Exists(myPath)) return;
 
-            IEnumerable<string> files = Directory.EnumerateFiles(myPath, "*.dll")
-                .Union(Directory.EnumerateFiles(myPath, "*.exe"));
+            var files = GetFilesForDirectory(myPath);
 
             #endregion
 
@@ -499,7 +489,7 @@ namespace sones.Library.VersionedPluginManager
                 //var matchingAssemblies = new List<Tuple<AssemblyName, AssemblyName>>();
                 foreach (AssemblyName assembly in loadedPluginAssembly.GetReferencedAssemblies())
                 {
-                    IEnumerable<KeyValuePair<Type, Tuple<ActivatorInfo, List<object>>>> matchings =
+                    IEnumerable<KeyValuePair<Type, InstanceContainer>> matchings =
                         _inheritTypeAndInstance.Where(kv => Assembly.GetAssembly(kv.Key).GetName().Name == assembly.Name);
                     
                     if (matchings != null)
@@ -509,7 +499,7 @@ namespace sones.Library.VersionedPluginManager
                             //matchingAssemblies.Add(new Tuple<AssemblyName, AssemblyName>(Assembly.GetAssembly(matchAss.Key).GetName(), assembly));
 
                             CheckVersion(myThrowExceptionOnIncompatibleVersion, loadedPluginAssembly,
-                                         Assembly.GetAssembly(matchAss.Key).GetName(), assembly, matchAss.Value.Item1);
+                                         Assembly.GetAssembly(matchAss.Key).GetName(), assembly, matchAss.Value.Info);
                         }
                     }
                 }
@@ -602,7 +592,7 @@ namespace sones.Library.VersionedPluginManager
                                           Type myCurrentPluginType)
         {
             
-            IEnumerable<KeyValuePair<Type, Tuple<ActivatorInfo, List<object>>>> validBaseTypes =
+            IEnumerable<KeyValuePair<Type, InstanceContainer>> validBaseTypes =
                 _inheritTypeAndInstance.Where(kv => 
                 {
                     Type realType = DeGenerification(kv.Key, myCurrentPluginType);
@@ -614,7 +604,7 @@ namespace sones.Library.VersionedPluginManager
 
             foreach (var baseType in validBaseTypes)
             {
-                ActivatorInfo activatorInfo = _inheritTypeAndInstance[baseType.Key].Item1;
+                ActivatorInfo activatorInfo = _inheritTypeAndInstance[baseType.Key].Info;
 
                 #region Get baseTypeAssembly and plugin referenced assembly
 
@@ -655,7 +645,7 @@ namespace sones.Library.VersionedPluginManager
 
                         if (instance != null)
                         {
-                            _inheritTypeAndInstance[baseType.Key].Item2.Add(instance);
+                            _inheritTypeAndInstance[baseType.Key].Objects.Add(instance);
 
                             if (OnPluginFound != null)
                             {
@@ -776,7 +766,7 @@ namespace sones.Library.VersionedPluginManager
         {
             if (_inheritTypeAndInstance.ContainsKey(typeof (T1)))
             {
-                foreach (object instance in _inheritTypeAndInstance[typeof (T1)].Item2)
+                foreach (object instance in _inheritTypeAndInstance[typeof (T1)].Objects)
                 {
                     if (mySelector == null || (mySelector != null && mySelector((T1) instance)))
                     {
@@ -807,10 +797,10 @@ namespace sones.Library.VersionedPluginManager
 
             if (mySelector == null)
             {
-                return !_inheritTypeAndInstance[typeof (T1)].Item2.IsNullOrEmpty();
+                return !_inheritTypeAndInstance[typeof (T1)].Objects.IsNullOrEmpty();
             }
-            
-            return _inheritTypeAndInstance[typeof (T1)].Item2.Any(o => mySelector((T1) o));
+
+            return _inheritTypeAndInstance[typeof(T1)].Objects.Any(o => mySelector((T1)o));
         }
 
         #endregion

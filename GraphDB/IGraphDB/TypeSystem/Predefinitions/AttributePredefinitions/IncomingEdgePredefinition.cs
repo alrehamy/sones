@@ -108,9 +108,7 @@ namespace sones.GraphDB.TypeSystem
 
         private string Combine(string myTargetType, string myTargetEdgeName)
         {
-            return String.Join(TypeSeparator.ToString(), 
-                                myTargetType, 
-                                myTargetEdgeName);
+            return myTargetType + TypeSeparator.ToString() + myTargetEdgeName;
         }
     }
 }

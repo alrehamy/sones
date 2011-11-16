@@ -192,24 +192,15 @@ namespace sones.GraphDS.Services.RemoteAPIService
 
             #region Streamed Contract
 
-            ContractDescription StreamedContract = ContractDescription.GetContract(typeof(IStreamedService));
-            StreamedContract.Namespace = Namespace;
-            ServiceEndpoint StreamedService = new ServiceEndpoint(StreamedContract, StreamedBinding, new EndpointAddress(this.URI.ToString() + "/streamed"));
-            _ServiceHost.AddServiceEndpoint(StreamedService);
+            _ServiceHost.AddServiceEndpoint(typeof(IStreamedService), StreamedBinding, this.URI.ToString() + "/streamed");
 
             #endregion
 
 
             #region GraphDS API Contract
 
-            ContractDescription APIContract = ContractDescription.GetContract(typeof(IGraphDS_API));
-            APIContract.Namespace = Namespace;
+            _ServiceHost.AddServiceEndpoint(typeof(IGraphDS_API), BasicBinding, this.URI);
 
-            #region SOAP
-            ServiceEndpoint APIService = new ServiceEndpoint(APIContract, BasicBinding, new EndpointAddress(this.URI.ToString()));
-            _ServiceHost.AddServiceEndpoint(APIService);
-            #endregion
-            
             #region json
             //ServiceEndpoint APIServiceJson = new ServiceEndpoint(APIContract, WebBinding, new EndpointAddress(this.URI.ToString() + "/json"));
             //APIServiceJson.Behaviors.Add(new WebScriptEnablingBehavior());
@@ -222,37 +213,25 @@ namespace sones.GraphDS.Services.RemoteAPIService
 
             #region VertexTypeService
 
-            ContractDescription VertexTypeServiceContract = ContractDescription.GetContract(typeof(IVertexTypeService));
-            VertexTypeServiceContract.Namespace = Namespace;
-            ServiceEndpoint VertexTypeService = new ServiceEndpoint(VertexTypeServiceContract, BasicBinding, new EndpointAddress(this.URI.ToString()));
-            _ServiceHost.AddServiceEndpoint(VertexTypeService);
+            _ServiceHost.AddServiceEndpoint(typeof(IVertexTypeService), BasicBinding, this.URI);
 
             #endregion
 
             #region VertexInstanceService
 
-            ContractDescription VertexServiceContract = ContractDescription.GetContract(typeof(IVertexService));
-            VertexServiceContract.Namespace = Namespace;
-            ServiceEndpoint VertexService = new ServiceEndpoint(VertexServiceContract, BasicBinding, new EndpointAddress(this.URI.ToString()));
-            _ServiceHost.AddServiceEndpoint(VertexService);
+            _ServiceHost.AddServiceEndpoint(typeof(IVertexService), BasicBinding, this.URI);
 
             #endregion
             
             #region EdgeTypeService
 
-            ContractDescription EdgeTypeServiceContract = ContractDescription.GetContract(typeof(IEdgeTypeService));
-            EdgeTypeServiceContract.Namespace = Namespace;
-            ServiceEndpoint EdgeTypeService = new ServiceEndpoint(EdgeTypeServiceContract, BasicBinding, new EndpointAddress(this.URI.ToString()));
-            _ServiceHost.AddServiceEndpoint(EdgeTypeService);
+            _ServiceHost.AddServiceEndpoint(typeof(IEdgeTypeService), BasicBinding, this.URI);
 
             #endregion
 
             #region EdgeInstanceService
 
-            ContractDescription EdgeInstanceServiceContract = ContractDescription.GetContract(typeof(IEdgeService));
-            EdgeInstanceServiceContract.Namespace = Namespace;
-            ServiceEndpoint EdgeInstanceService = new ServiceEndpoint(EdgeInstanceServiceContract, BasicBinding, new EndpointAddress(this.URI.ToString()));
-            _ServiceHost.AddServiceEndpoint(EdgeInstanceService);
+            _ServiceHost.AddServiceEndpoint(typeof(IEdgeService), BasicBinding, this.URI);
 
             #endregion
             
@@ -274,9 +253,7 @@ namespace sones.GraphDS.Services.RemoteAPIService
             Binding MexBinding = new WebHttpBinding();
             MexBinding.Namespace = Namespace;
 
-            ContractDescription MexContract = ContractDescription.GetContract(typeof(IMonoMEX));
-            ServiceEndpoint MexService = new ServiceEndpoint(MexContract, MexBinding, new EndpointAddress(MexUri.ToString()));
-            _MexServiceHost.AddServiceEndpoint(MexService);
+            _MexServiceHost.AddServiceEndpoint(typeof(IMonoMEX), MexBinding, MexUri);
             _MexServiceHost.Description.Endpoints[0].Behaviors.Add(new System.ServiceModel.Description.WebHttpBehavior());
 
 

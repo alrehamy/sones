@@ -26,18 +26,19 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using sones.GraphDS.Services.RemoteAPIService.DataContracts.ServiceTypeManagement;
 using sones.GraphDB.TypeSystem;
+using sones.GraphQL.Result;
 
 namespace sones.GraphDS.Services.RemoteAPIService.DataContracts.QueryResult
 {
     [DataContract(Namespace = sonesRPCServer.Namespace)]
     public class ServiceEdgeView
     {
-        public ServiceEdgeView(IEnumerable<Tuple<string, object>> myPropertyList)
+        public ServiceEdgeView(IEnumerable<PropertyViewContainer> myPropertyList)
         {
-            PropertyList = myPropertyList.ToList();
+            PropertyList = myPropertyList.ToDictionary(_ => _.PropertyName, _ => _.Property);
         }
 
         [DataMember]
-        public List<Tuple<string, object>> PropertyList;
+        public Dictionary<string, object> PropertyList;
     }
 }

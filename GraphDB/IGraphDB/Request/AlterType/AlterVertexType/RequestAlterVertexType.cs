@@ -455,7 +455,7 @@ namespace sones.GraphDB.Request
         /// <returns>The reference of the current object. (fluent interface).</returns>
         public RequestAlterVertexType UndefineAttribute(String myAttributeName)
         {
-            if (!String.IsNullOrWhiteSpace(myAttributeName))
+            if (!String.IsNullOrEmpty(myAttributeName))
             {
                 _toBeUndefinedAttributes = (_toBeUndefinedAttributes) ?? new List<String>();
                 _toBeUndefinedAttributes.Add(myAttributeName);
@@ -594,7 +594,7 @@ namespace sones.GraphDB.Request
         /// <returns>The reference of the current object. (fluent interface).</returns>
         public RequestAlterVertexType RemoveUnknownAttribute(String myAttrName)
         {
-            if (!String.IsNullOrWhiteSpace(myAttrName))
+            if (!String.IsNullOrEmpty(myAttrName))
             {
                 _toBeRemovedUnknownAttributes = (_toBeRemovedUnknownAttributes) ?? new List<String>();
                 _toBeRemovedUnknownAttributes.Add(myAttrName);
@@ -610,7 +610,7 @@ namespace sones.GraphDB.Request
         /// <returns>The reference of the current object. (fluent interface).</returns>
         public RequestAlterVertexType RemoveProperty(String myProperty)
         {
-            if (!String.IsNullOrWhiteSpace(myProperty))
+            if (!String.IsNullOrEmpty(myProperty))
             {
                 _toBeRemovedProperties = (_toBeRemovedProperties) ?? new List<String>();
                 _toBeRemovedProperties.Add(myProperty);
@@ -626,7 +626,7 @@ namespace sones.GraphDB.Request
         /// <returns>The reference of the current object. (fluent interface).</returns>
         public RequestAlterVertexType RemoveBinaryProperty(String myBinaryProperty)
         {
-            if (!String.IsNullOrWhiteSpace(myBinaryProperty))
+            if (!String.IsNullOrEmpty(myBinaryProperty))
             {
                 _toBeRemovedBinaryProperties = (_toBeRemovedBinaryProperties) ?? new List<String>();
                 _toBeRemovedBinaryProperties.Add(myBinaryProperty);
@@ -642,7 +642,7 @@ namespace sones.GraphDB.Request
         /// <returns>The reference of the current object. (fluent interface).</returns>
         public RequestAlterVertexType RemoveOutgoingEdge(String myOutgoingEdge)
         {
-            if (!String.IsNullOrWhiteSpace(myOutgoingEdge))
+            if (!String.IsNullOrEmpty(myOutgoingEdge))
             {
                 _toBeRemovedOutgoingEdges = (_toBeRemovedOutgoingEdges) ?? new List<String>();
                 _toBeRemovedOutgoingEdges.Add(myOutgoingEdge);
@@ -658,7 +658,7 @@ namespace sones.GraphDB.Request
         /// <returns>The reference of the current object. (fluent interface).</returns>
         public RequestAlterVertexType RemoveIncomingEdge(String myIncomingEdge)
         {
-            if (!String.IsNullOrWhiteSpace(myIncomingEdge))
+            if (!String.IsNullOrEmpty(myIncomingEdge))
             {
                 _toBeRemovedIncomingEdges = (_toBeRemovedIncomingEdges) ?? new List<String>();
                 _toBeRemovedIncomingEdges.Add(myIncomingEdge);
@@ -674,7 +674,7 @@ namespace sones.GraphDB.Request
         /// <returns>The reference of the current object. (fluent interface).</returns>
         public RequestAlterVertexType RemoveUnique(String myUnique)
         {
-            if (!String.IsNullOrWhiteSpace(myUnique))
+            if (!String.IsNullOrEmpty(myUnique))
             {
                 _toBeRemovedUniques = (_toBeRemovedUniques) ?? new List<String>();
                 _toBeRemovedUniques.Add(myUnique);
@@ -690,7 +690,7 @@ namespace sones.GraphDB.Request
         /// <returns>The reference of the current object. (fluent interface).</returns>
         public RequestAlterVertexType RemoveMandatory(String myMandatory)
         {
-            if (!String.IsNullOrWhiteSpace(myMandatory))
+            if (!String.IsNullOrEmpty(myMandatory))
             {
                 _toBeRemovedMandatories = (_toBeRemovedMandatories) ?? new List<String>();
                 _toBeRemovedMandatories.Add(myMandatory);
@@ -707,7 +707,7 @@ namespace sones.GraphDB.Request
         /// <returns>The reference of the current object. (fluent interface).</returns>
         public RequestAlterVertexType RemoveIndex(String myIndexName, String myEdition)
         {
-            if (!String.IsNullOrWhiteSpace(myIndexName))
+            if (!String.IsNullOrEmpty(myIndexName))
             {
                 _toBeRemovedIndices = (_toBeRemovedIndices) ?? new Dictionary<String, String>();
                 if (!_toBeRemovedIndices.ContainsKey(myIndexName))
@@ -747,7 +747,7 @@ namespace sones.GraphDB.Request
         /// <returns>The reference of the current object. (fluent interface).</returns>
         public RequestAlterVertexType RenameAttribute(String myOldAttributeName, String myNewAttributeName)
         {
-            if (!String.IsNullOrWhiteSpace(myOldAttributeName))
+            if (!String.IsNullOrEmpty(myOldAttributeName))
             {
                 _toBeRenamedAttributes = (_toBeRenamedAttributes) ?? new Dictionary<String, String>();
                 if (!_toBeRenamedAttributes.ContainsKey(myOldAttributeName))
@@ -767,7 +767,7 @@ namespace sones.GraphDB.Request
         /// <returns>The reference of the current object. (fluent interface).</returns>
         public RequestAlterVertexType RenameType(String myNewTypeName)
         {
-            if (!String.IsNullOrWhiteSpace(myNewTypeName))
+            if (!String.IsNullOrEmpty(myNewTypeName))
             {
                 AlteredTypeName = myNewTypeName;
             }

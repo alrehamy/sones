@@ -97,7 +97,7 @@ namespace sones.GraphFS.Element
         /// </summary>
         /// <param name="myFilter">An optional filter function</param>
         /// <returns>An enumerable of propertyID/propertyValue</returns>
-        protected IEnumerable<Tuple<long, IComparable>> GetAllPropertiesProtected(PropertyHyperGraphFilter.GraphElementStructuredPropertyFilter myFilter = null)
+        protected IEnumerable<PropertyContainer> GetAllPropertiesProtected(PropertyHyperGraphFilter.GraphElementStructuredPropertyFilter myFilter = null)
         {
             if (_structuredProperties != null)
             {
@@ -107,12 +107,12 @@ namespace sones.GraphFS.Element
                     {
                         if (myFilter(aProperty.Key, aProperty.Value))
                         {
-                            yield return new Tuple<long, IComparable>(aProperty.Key, aProperty.Value);
+                            yield return new PropertyContainer { PropertyID = aProperty.Key, Property = aProperty.Value };
                         }
                     }
                     else
                     {
-                        yield return new Tuple<long, IComparable>(aProperty.Key, aProperty.Value);
+                        yield return new PropertyContainer { PropertyID = aProperty.Key, Property = aProperty.Value };
                     }
                 }
             }
@@ -128,7 +128,7 @@ namespace sones.GraphFS.Element
         /// </summary>
         /// <param name="myFilter">An optional filter function</param>
         /// <returns>An enumerable of propertyName/PropertyValue</returns>
-        protected IEnumerable<Tuple<string, object>> GetAllUnstructuredPropertiesProtected(
+        protected IEnumerable<UnstructuredPropertyContainer> GetAllUnstructuredPropertiesProtected(
             PropertyHyperGraphFilter.GraphElementUnStructuredPropertyFilter myFilter = null)
         {
             if (_unstructuredProperties != null)
@@ -140,12 +140,12 @@ namespace sones.GraphFS.Element
                         if (myFilter(aUnstructuredProperty.Key, aUnstructuredProperty.Value))
                         {
                             yield return
-                                new Tuple<String, object>(aUnstructuredProperty.Key, aUnstructuredProperty.Value);
+                                new UnstructuredPropertyContainer { PropertyName = aUnstructuredProperty.Key, Property = aUnstructuredProperty.Value };
                         }
                     }
                     else
                     {
-                        yield return new Tuple<String, object>(aUnstructuredProperty.Key, aUnstructuredProperty.Value);
+                        yield return new UnstructuredPropertyContainer { PropertyName = aUnstructuredProperty.Key, Property = aUnstructuredProperty.Value };
                     }
                 }
             }

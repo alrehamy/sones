@@ -1141,10 +1141,10 @@ namespace sones.GraphQL.GQL.Manager.Select
 
                                 if (!String.IsNullOrWhiteSpace(attrSel.Alias))
                                 {
-                                    Attributes.Item2.Add(attrSel.Alias, pathHyperEdge.Item2);
+                                    Attributes.Item2.Add(attrSel.Alias, pathHyperEdge.Edge);
                                 }
                                 else
-                                    Attributes.Item2.Add(pathHyperEdge.Item1, pathHyperEdge.Item2);
+                                    Attributes.Item2.Add(pathHyperEdge.EdgeName, pathHyperEdge.Edge);
                             }
                         }
                         else
@@ -1483,7 +1483,7 @@ namespace sones.GraphQL.GQL.Manager.Select
 
             foreach (var aUnstructuredProperty in myDBObject.GetAllUnstructuredProperties())
             {
-                myAttributes.Item1.Add(aUnstructuredProperty.Item1, aUnstructuredProperty.Item2);
+                myAttributes.Item1.Add(aUnstructuredProperty.PropertyName, aUnstructuredProperty.Property);
             }
 
             #endregion
@@ -1857,7 +1857,7 @@ namespace sones.GraphQL.GQL.Manager.Select
 
             foreach (var aUnstructuredProperty in aSingleEdge.GetAllUnstructuredProperties())
             {
-                result.Add(aUnstructuredProperty.Item1, aUnstructuredProperty.Item2);
+                result.Add(aUnstructuredProperty.PropertyName, aUnstructuredProperty.Property);
             }
 
             #endregion

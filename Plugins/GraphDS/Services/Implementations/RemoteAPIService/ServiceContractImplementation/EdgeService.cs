@@ -102,14 +102,14 @@ namespace sones.GraphDS.Services.RemoteAPIService.ServiceContractImplementation
             }
         }
 
-        public List<Tuple<long, object>> GetAllProperties(SecurityToken mySecurityToken, Int64 myTransToken, ServiceEdgeInstance myEdge)
+        public List<ServicePropertyContainer> GetAllProperties(SecurityToken mySecurityToken, Int64 myTransToken, ServiceEdgeInstance myEdge)
         {
-            IEnumerable<Tuple<long, IComparable>> PropertyCollection;
+            List<ServicePropertyContainer> PropertyCollection;
             if(myEdge.EdgePropertyID != null)
             {
                 var Request = ServiceRequestFactory.MakeRequestGetVertex(myEdge.SourceVertex.TypeID, myEdge.SourceVertex.VertexID);
                 var SourceVertex = this.GraphDS.GetVertex<IVertex>(mySecurityToken, myTransToken, Request, ServiceReturnConverter.ConvertOnlyVertexInstance);
-                PropertyCollection = SourceVertex.GetOutgoingEdge((Int64)myEdge.EdgePropertyID).GetAllProperties();
+                PropertyCollection = SourceVertex.GetOutgoingEdge((Int64)myEdge.EdgePropertyID).GetAllProperties().Select(_ => new ServicePropertyContainer { PropertyID = _.PropertyID, Property = _.Property }).ToList();
             }
             else
             {
@@ -120,9 +120,9 @@ namespace sones.GraphDS.Services.RemoteAPIService.ServiceContractImplementation
                 IHyperEdge HyperEdge = SourceVertex.GetOutgoingHyperEdge((Int64)myEdge.EdgePropertyID);
                 PropertyCollection = HyperEdge.GetAllEdges(delegate(ISingleEdge mySingleEdge){
                     return (mySingleEdge.GetSourceVertex().VertexID == myEdge.SourceVertex.VertexID && mySingleEdge.GetTargetVertex().VertexID == (myEdge as ServiceSingleEdgeInstance).TargetVertex.VertexID);
-                }).First<ISingleEdge>().GetAllProperties();
+                }).First<ISingleEdge>().GetAllProperties().Select(_ => new ServicePropertyContainer { PropertyID = _.PropertyID, Property = _.Property }).ToList();
             }
-            return PropertyCollection.Select(x => new Tuple<long, object>(x.Item1, (object)x.Item2)).ToList();
+            return PropertyCollection;
         }
 
         public string GetPropertyAsString(SecurityToken mySecurityToken, Int64 myTransToken, ServiceEdgeInstance myEdge, long myPropertyID)
@@ -209,13 +209,13 @@ namespace sones.GraphDS.Services.RemoteAPIService.ServiceContractImplementation
             }
         }
 
-        public List<Tuple<string, object>> GetAllUnstructuredProperties(SecurityToken mySecurityToken, Int64 myTransToken, ServiceEdgeInstance myEdge)
+        public List<ServiceUnstructuredPropertyContainer> GetAllUnstructuredProperties(SecurityToken mySecurityToken, Int64 myTransToken, ServiceEdgeInstance myEdge)
         {
             if(myEdge.EdgePropertyID != null)
             {
                 var Request = ServiceRequestFactory.MakeRequestGetVertex(myEdge.SourceVertex.TypeID, myEdge.SourceVertex.VertexID);
                 var SourceVertex = this.GraphDS.GetVertex<IVertex>(mySecurityToken, myTransToken, Request, ServiceReturnConverter.ConvertOnlyVertexInstance);
-                return SourceVertex.GetOutgoingEdge((Int64)myEdge.EdgePropertyID).GetAllUnstructuredProperties().ToList();
+                return SourceVertex.GetOutgoingEdge((Int64)myEdge.EdgePropertyID).GetAllUnstructuredProperties().Select(_ => new ServiceUnstructuredPropertyContainer { PropertyName = _.PropertyName, Property = _.Property }).ToList();
             }
             else
             {
@@ -226,7 +226,7 @@ namespace sones.GraphDS.Services.RemoteAPIService.ServiceContractImplementation
                 IHyperEdge HyperEdge = SourceVertex.GetOutgoingHyperEdge((Int64)myEdge.EdgePropertyID);
                 return HyperEdge.GetAllEdges(delegate(ISingleEdge mySingleEdge){
                     return (mySingleEdge.GetSourceVertex().VertexID == myEdge.SourceVertex.VertexID && mySingleEdge.GetTargetVertex().VertexID == (myEdge as ServiceSingleEdgeInstance).TargetVertex.VertexID);
-                }).First<ISingleEdge>().GetAllUnstructuredProperties().ToList();
+                }).First<ISingleEdge>().GetAllUnstructuredProperties().Select(_ => new ServiceUnstructuredPropertyContainer { PropertyName = _.PropertyName, Property = _.Property }).ToList();
             }
         }
 

@@ -23,7 +23,7 @@ namespace sones.GraphDB.ErrorHandling
             AllowedParameters = myParameters;
 
             var parameterString = myParameters.Select(_=> string.Format("{0}({1})", _.Key, _.Value.Name));
-            _msg = String.Format("The option {0} is not allowed for this plugin. Please use only the following parameters: {1}", myOption, String.Join(", ", parameterString));
+            _msg = String.Format("The option {0} is not allowed for this plugin. Please use only the following parameters: {1}", myOption, String.Join(", ", parameterString.ToArray()));
         }
     }
 }

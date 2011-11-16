@@ -181,22 +181,22 @@ namespace sones.Plugins.GraphDS.IO.JSON_IO
 
                 foreach (var _property in aVertex.GetAllProperties())
                 {
-                    if (_property.Item2 == null)
-                        _properties.Add(new JProperty(_property.Item1, ""));
+                    if (_property.Property == null)
+                        _properties.Add(new JProperty(_property.PropertyName, ""));
                     else
-                        if (_property.Item2 is Stream)
+                        if (_property.Property is Stream)
                         {
-                            _properties.Add(new JProperty(_property.Item1, "BinaryProperty"));
+                            _properties.Add(new JProperty(_property.PropertyName, "BinaryProperty"));
                         }
                         else
-                        {                            
-                            if (_property.Item2 is ICollectionWrapper)
+                        {
+                            if (_property.Property is ICollectionWrapper)
                             {
-                                _properties.Add(new JProperty(_property.Item1, HandleListProperties((ICollectionWrapper)_property.Item2)));
+                                _properties.Add(new JProperty(_property.PropertyName, HandleListProperties((ICollectionWrapper)_property.Property)));
                             }
                             else
                             {
-                                _properties.Add(new JProperty(_property.Item1, _property.Item2.ToString()));
+                                _properties.Add(new JProperty(_property.PropertyName, _property.Property.ToString()));
                             }
                         }
                 }
@@ -211,14 +211,14 @@ namespace sones.Plugins.GraphDS.IO.JSON_IO
 
                 foreach (var _edge in aVertex.GetAllEdges())
                 {
-                    if (_edge.Item2 == null)
+                    if (_edge.Edge == null)
                     {
-                        _edges.Add(new JObject(new JProperty(_edge.Item1, "")));
+                        _edges.Add(new JObject(new JProperty(_edge.EdgeName, "")));
                     }
                     else
                     {
-                        JArray _newEdge = GenerateEdgeViewJSON(_edge.Item2);
-                        _edges.Add(new JObject(new JProperty(_edge.Item2.GetType().Name, new JObject(new JProperty(_edge.Item1, _newEdge)))));
+                        JArray _newEdge = GenerateEdgeViewJSON(_edge.Edge);
+                        _edges.Add(new JObject(new JProperty(_edge.Edge.GetType().Name, new JObject(new JProperty(_edge.EdgeName, _newEdge)))));
                     }
                 }
                 // add to the results...
@@ -245,25 +245,25 @@ namespace sones.Plugins.GraphDS.IO.JSON_IO
 
             foreach (var _property in aEdge.GetAllProperties())
             {
-                if (_property.Item2 == null)
+                if (_property.Property == null)
                 {
-                    _properties.Add(new JProperty(_property.Item1, ""));
+                    _properties.Add(new JProperty(_property.PropertyName, ""));
                 }
                 else
                 {
-                    if (_property.Item2 is Stream)
+                    if (_property.Property is Stream)
                     {
-                        _properties.Add(new JProperty(_property.Item1, "BinaryProperty"));
+                        _properties.Add(new JProperty(_property.PropertyName, "BinaryProperty"));
                     }
                     else
                     {
-                        if (_property.Item2 is ICollectionWrapper)
+                        if (_property.Property is ICollectionWrapper)
                         {
-                            _properties.Add(new JProperty(_property.Item1, HandleListProperties((ICollectionWrapper)_property.Item2)));
+                            _properties.Add(new JProperty(_property.PropertyName, HandleListProperties((ICollectionWrapper)_property.Property)));
                         }
                         else
                         {
-                            _properties.Add(new JProperty(_property.Item1, _property.Item2.ToString()));
+                            _properties.Add(new JProperty(_property.PropertyName, _property.Property.ToString()));
                         }                        
                     }
                 }
@@ -283,14 +283,14 @@ namespace sones.Plugins.GraphDS.IO.JSON_IO
 
                     foreach (var singleEdgeProp in singleEdge.GetAllProperties())
                     {
-                        if (singleEdgeProp.Item2 is ICollectionWrapper)
+                        if (singleEdgeProp.Property is ICollectionWrapper)
                         {
-                            _singleEdgeProperties.Add(new JProperty(singleEdgeProp.Item1, HandleListProperties((ICollectionWrapper)singleEdgeProp.Item2)));
+                            _singleEdgeProperties.Add(new JProperty(singleEdgeProp.PropertyName, HandleListProperties((ICollectionWrapper)singleEdgeProp.Property)));
                             //edgeProperties.Add(new JObject(new JProperty(singleEdgeProp.Item1, HandleListProperties((ICollectionWrapper)singleEdgeProp.Item2))));
                         }
                         else
                         {
-                            _singleEdgeProperties.Add(new JProperty(singleEdgeProp.Item1, singleEdgeProp.Item2.ToString()));
+                            _singleEdgeProperties.Add(new JProperty(singleEdgeProp.PropertyName, singleEdgeProp.Property.ToString()));
                             //edgeProperties.Add(new JObject(new JProperty(singleEdgeProp.Item1, singleEdgeProp.Item2.ToString())));
                         }
                     }

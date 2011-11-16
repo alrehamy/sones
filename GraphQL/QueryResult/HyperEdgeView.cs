@@ -111,12 +111,12 @@ namespace sones.GraphQL.Result
                 return _propertyList.Count;
         }
 
-        public IEnumerable<Tuple<string, object>> GetAllProperties()
+        public IEnumerable<PropertyViewContainer> GetAllProperties()
         {
             if (_propertyList == null)
-                return new List<Tuple<string, object>>();
+                return new List<PropertyViewContainer>();
             else
-                return _propertyList.Select(item => new Tuple<String, Object>(item.Key, item.Value));
+                return _propertyList.Select(item => new PropertyViewContainer { PropertyName = item.Key, Property = item.Value });
         }
 
         public string GetPropertyAsString(string myPropertyName)

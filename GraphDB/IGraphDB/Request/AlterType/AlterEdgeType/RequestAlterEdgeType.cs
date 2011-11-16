@@ -298,7 +298,7 @@ namespace sones.GraphDB.Request
         /// <returns>The reference of the current object. (fluent interface).</returns>
         public RequestAlterEdgeType UndefineAttribute(String myAttributeName)
         {
-            if (!String.IsNullOrWhiteSpace(myAttributeName))
+            if (!String.IsNullOrEmpty(myAttributeName))
             {
                 _toBeUndefinedAttributes = (_toBeUndefinedAttributes) ?? new List<String>();
                 _toBeUndefinedAttributes.Add(myAttributeName);
@@ -335,7 +335,7 @@ namespace sones.GraphDB.Request
         /// <returns>The reference of the current object. (fluent interface).</returns>
         public RequestAlterEdgeType RemoveUnknownAttribute(String myAttrName)
         {
-            if (!String.IsNullOrWhiteSpace(myAttrName))
+            if (!String.IsNullOrEmpty(myAttrName))
             {
                 _toBeRemovedUnknownAttributes = (_toBeRemovedUnknownAttributes) ?? new List<String>();
                 _toBeRemovedUnknownAttributes.Add(myAttrName);
@@ -351,7 +351,7 @@ namespace sones.GraphDB.Request
         /// <returns>The reference of the current object. (fluent interface).</returns>
         public RequestAlterEdgeType RemoveProperty(String myProperty)
         {
-            if (!String.IsNullOrWhiteSpace(myProperty))
+            if (!String.IsNullOrEmpty(myProperty))
             {
                 _toBeRemovedProperties = (_toBeRemovedProperties) ?? new List<String>();
                 _toBeRemovedProperties.Add(myProperty);
@@ -388,7 +388,7 @@ namespace sones.GraphDB.Request
         /// <returns>The reference of the current object. (fluent interface).</returns>
         public RequestAlterEdgeType RenameAttribute(String myOldAttributeName, String myNewAttributeName)
         {
-            if (!String.IsNullOrWhiteSpace(myOldAttributeName))
+            if (!String.IsNullOrEmpty(myOldAttributeName))
             {
                 _toBeRenamedAttributes = (_toBeRenamedAttributes) ?? new Dictionary<String, String>();
                 if (!_toBeRenamedAttributes.ContainsKey(myOldAttributeName))
@@ -408,7 +408,7 @@ namespace sones.GraphDB.Request
         /// <returns>The reference of the current object. (fluent interface).</returns>
         public RequestAlterEdgeType RenameType(String myNewTypeName)
         {
-            if (!String.IsNullOrWhiteSpace(myNewTypeName))
+            if (!String.IsNullOrEmpty(myNewTypeName))
                 AlteredTypeName = myNewTypeName;
 
             return this;

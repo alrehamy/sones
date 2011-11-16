@@ -160,7 +160,7 @@ namespace sones.GraphFS.Element.Edge
                         : _structuredProperties.Count;
         }
 
-        public IEnumerable<Tuple<long, IComparable>> GetAllProperties(PropertyHyperGraphFilter.GraphElementStructuredPropertyFilter myFilter = null)
+        public IEnumerable<PropertyContainer> GetAllProperties(PropertyHyperGraphFilter.GraphElementStructuredPropertyFilter myFilter = null)
         {
             return GetAllPropertiesProtected(myFilter);
         }
@@ -197,7 +197,7 @@ namespace sones.GraphFS.Element.Edge
             return _unstructuredProperties == null ? 0 : _unstructuredProperties.Count;
         }
 
-        public IEnumerable<Tuple<string, object>> GetAllUnstructuredProperties(
+        public IEnumerable<UnstructuredPropertyContainer> GetAllUnstructuredProperties(
             PropertyHyperGraphFilter.GraphElementUnStructuredPropertyFilter myFilter = null)
         {
             return GetAllUnstructuredPropertiesProtected(myFilter);

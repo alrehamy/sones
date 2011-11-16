@@ -88,11 +88,11 @@ namespace sones.GraphDS.Services.RemoteAPIService.ServiceContractImplementation
             return Response.Select(x => new ServiceVertexType(x)).ToList();
         }
 
-        public Tuple<IEnumerable<IComparable>, IEnumerable<IComparable>> Delete(SecurityToken mySecurityToken, Int64 myTransactionToken,
+        public KeyValuePair<IEnumerable<IComparable>, IEnumerable<IComparable>> Delete(SecurityToken mySecurityToken, Int64 myTransactionToken,
             ServiceVertexType myVertexType, IEnumerable<Int64> myVertexIDs = null, ServiceDeletePayload myDeletePayload = null)
         {
             var Request = ServiceRequestFactory.MakeRequestDelete(myVertexType, myVertexIDs, myDeletePayload);
-            var Result = this.GraphDS.Delete<Tuple<IEnumerable<IComparable>, IEnumerable<IComparable>>>(mySecurityToken, myTransactionToken, Request,
+            var Result = this.GraphDS.Delete<KeyValuePair<IEnumerable<IComparable>, IEnumerable<IComparable>>>(mySecurityToken, myTransactionToken, Request,
                 ServiceReturnConverter.ConverteAllLists);
             return Result;
         }

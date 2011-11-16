@@ -504,7 +504,7 @@ namespace sones.GraphDB.Manager.TypeManagement
 
                     var vertex = Get(delType.ID, myTransaction, mySecurity);
                     List<long> incomingVertices = new List<long>();
-                    foreach (var collection in vertex.GetAllIncomingVertices().Select(_ => _.Item3.Select(x => x.VertexID)))
+                    foreach (var collection in vertex.GetAllIncomingVertices().Select(_ => _.IncomingVertices.Select(x => x.VertexID)))
                         incomingVertices.AddRange(collection);
 
                     var attributes = delType.GetAttributeDefinitions(true).Select(_ => _.ID);
@@ -733,7 +733,7 @@ namespace sones.GraphDB.Manager.TypeManagement
 
             foreach (var property in edge.GetAllUnstructuredProperties())
             {
-                if (property.Item1.CompareTo(aAttribute.AttributeName) == 0)
+                if (property.PropertyName.CompareTo(aAttribute.AttributeName) == 0)
                 {
                     bFound = true;
 
@@ -744,20 +744,20 @@ namespace sones.GraphDB.Manager.TypeManagement
                     // Try Convert Type
                     try
                     {
-                        value = property.Item2.ConvertToIComparable(targettype);
+                        value = property.Property.ConvertToIComparable(targettype);
                     }
                     catch (InvalidCastException)
                     {
-                        throw new VertexAttributeCastException(aAttribute.AttributeName, property.Item2.GetType(), targettype, false);
+                        throw new VertexAttributeCastException(aAttribute.AttributeName, property.Property.GetType(), targettype, false);
                     }
                     catch (FormatException)
                     {
-                        throw new VertexAttributeCastException(aAttribute.AttributeName, property.Item2.GetType(), targettype, true);
+                        throw new VertexAttributeCastException(aAttribute.AttributeName, property.Property.GetType(), targettype, true);
                     }
 
                     // add list with only one item -> unstructured property to delete
                     var unstructdel = new List<string>();
-                    unstructdel.Add(property.Item1);
+                    unstructdel.Add(property.PropertyName);
                     UnstructuredPropertiesUpdate propdelete = new UnstructuredPropertiesUpdate(null, unstructdel);
 
                     // add list with only one item -> structured property to add
@@ -922,7 +922,7 @@ namespace sones.GraphDB.Manager.TypeManagement
 
             foreach (var property in edge.GetAllUnstructuredProperties())
             {
-                if (property.Item1.CompareTo(aAttribute.AttributeName) == 0)
+                if (property.PropertyName.CompareTo(aAttribute.AttributeName) == 0)
                 {
                     bFound = true;
 
@@ -933,20 +933,20 @@ namespace sones.GraphDB.Manager.TypeManagement
                     // Try Convert Type
                     try
                     {
-                        value = property.Item2.ConvertToIComparable(targettype);
+                        value = property.Property.ConvertToIComparable(targettype);
                     }
                     catch (InvalidCastException)
                     {
-                        throw new VertexAttributeCastException(aAttribute.AttributeName, property.Item2.GetType(), targettype, false);
+                        throw new VertexAttributeCastException(aAttribute.AttributeName, property.Property.GetType(), targettype, false);
                     }
                     catch (FormatException)
                     {
-                        throw new VertexAttributeCastException(aAttribute.AttributeName, property.Item2.GetType(), targettype, true);
+                        throw new VertexAttributeCastException(aAttribute.AttributeName, property.Property.GetType(), targettype, true);
                     }
 
                     // add list with only one item -> unstructured property to delete
                     var unstructdel = new List<string>();
-                    unstructdel.Add(property.Item1);
+                    unstructdel.Add(property.PropertyName);
                     UnstructuredPropertiesUpdate propdelete = new UnstructuredPropertiesUpdate(null, unstructdel);
 
                     // add list with only one item -> structured property to add
@@ -1058,23 +1058,23 @@ namespace sones.GraphDB.Manager.TypeManagement
                     {
                         foreach (var outedge in vertex.GetAllOutgoingSingleEdges(new PropertyHyperGraphFilter.OutgoingSingleEdgeFilter((ID, edge) => (edge.EdgeTypeID == myType.ID))))
                         {
-                            ISingleEdge edge = outedge.Item2;
+                            ISingleEdge edge = outedge.Edge;
                             if (edge == null) continue;
 
-                            DefinePropertyOnSingleEdge(myTransactionToken, mySecurityToken, edge, aAttribute, id, outedge.Item1, vertex, myType);
+                            DefinePropertyOnSingleEdge(myTransactionToken, mySecurityToken, edge, aAttribute, id, outedge.PropertyID, vertex, myType);
                         }
 
                         foreach (var outedge in vertex.GetAllOutgoingHyperEdges(new PropertyHyperGraphFilter.OutgoingHyperEdgeFilter((ID, edge) => (edge.EdgeTypeID == myType.ID))))
                         {
-                            IHyperEdge edge = outedge.Item2;
+                            IHyperEdge edge = outedge.Edge;
 
                             if (edge == null) continue;
 
-                            DefinePropertyOnHyperEdge(myTransactionToken, mySecurityToken, edge, aAttribute, id, outedge.Item1, vertex, myType);
+                            DefinePropertyOnHyperEdge(myTransactionToken, mySecurityToken, edge, aAttribute, id, outedge.PropertyID, vertex, myType);
 
                             foreach (var containededge in edge.GetAllEdges(new PropertyHyperGraphFilter.SingleEdgeFilter((cedge) => (cedge.EdgeTypeID == myType.ID))))
                             {
-                                DefinePropertyOnSingleEdge(myTransactionToken, mySecurityToken, containededge, aAttribute, id, outedge.Item1, vertex, myType, true);
+                                DefinePropertyOnSingleEdge(myTransactionToken, mySecurityToken, containededge, aAttribute, id, outedge.PropertyID, vertex, myType, true);
                             }
                         }
                     }
@@ -1322,23 +1322,23 @@ namespace sones.GraphDB.Manager.TypeManagement
                     {
                         foreach (var outedge in vertex.GetAllOutgoingSingleEdges(new PropertyHyperGraphFilter.OutgoingSingleEdgeFilter((ID, edge) => (edge.EdgeTypeID == myType.ID))))
                         {
-                            ISingleEdge edge = outedge.Item2;
+                            ISingleEdge edge = outedge.Edge;
                             if (edge == null) continue;
 
-                            UndefinePropertyOnSingleEdge(myTransactionToken, mySecurityToken, edge, aAttribute, propertyDefinition.ID, outedge.Item1, vertex, myType);
+                            UndefinePropertyOnSingleEdge(myTransactionToken, mySecurityToken, edge, aAttribute, propertyDefinition.ID, outedge.PropertyID, vertex, myType);
                         }
 
                         foreach (var outedge in vertex.GetAllOutgoingHyperEdges(new PropertyHyperGraphFilter.OutgoingHyperEdgeFilter((ID, edge) => (edge.EdgeTypeID == myType.ID))))
                         {
-                            IHyperEdge edge = outedge.Item2;
+                            IHyperEdge edge = outedge.Edge;
 
                             if (edge == null) continue;
 
-                            UndefinePropertyOnHyperEdge(myTransactionToken, mySecurityToken, edge, aAttribute, propertyDefinition.ID, outedge.Item1, vertex, myType);
+                            UndefinePropertyOnHyperEdge(myTransactionToken, mySecurityToken, edge, aAttribute, propertyDefinition.ID, outedge.PropertyID, vertex, myType);
 
                             foreach (var containededge in edge.GetAllEdges(new PropertyHyperGraphFilter.SingleEdgeFilter((cedge) => (cedge.EdgeTypeID == myType.ID))))
                             {
-                                UndefinePropertyOnSingleEdge(myTransactionToken, mySecurityToken, containededge, aAttribute, propertyDefinition.ID, outedge.Item1, vertex, myType, true);
+                                UndefinePropertyOnSingleEdge(myTransactionToken, mySecurityToken, containededge, aAttribute, propertyDefinition.ID, outedge.PropertyID, vertex, myType, true);
                             }
                         }
                     }

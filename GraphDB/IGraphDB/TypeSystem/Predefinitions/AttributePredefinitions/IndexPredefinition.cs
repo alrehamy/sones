@@ -154,7 +154,7 @@ namespace sones.GraphDB.TypeSystem
         /// <param name="myIndexTypeName">The type name of the index.</param>
         public IndexPredefinition SetIndexType(String myIndexTypeName)
         {
-            if(!String.IsNullOrWhiteSpace(myIndexTypeName))
+            if (!String.IsNullOrEmpty(myIndexTypeName))
                 TypeName = myIndexTypeName;
             
             return this;

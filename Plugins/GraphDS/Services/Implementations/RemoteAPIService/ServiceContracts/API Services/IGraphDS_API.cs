@@ -93,7 +93,7 @@ namespace sones.GraphDS.Services.RemoteAPIService.API_Services
             List<ServiceVertexTypePredefinition> myVertexTypePreDef);
 
         [OperationContract]
-        Tuple<IEnumerable<IComparable>, IEnumerable<IComparable>> Delete(SecurityToken mySecurityToken, Int64 myTransactionToken,
+        KeyValuePair<IEnumerable<IComparable>, IEnumerable<IComparable>> Delete(SecurityToken mySecurityToken, Int64 myTransactionToken,
             ServiceVertexType myVertexType, IEnumerable<Int64> myVertexIDs = null, ServiceDeletePayload myDeletePayload = null);
 
         [OperationContract]
