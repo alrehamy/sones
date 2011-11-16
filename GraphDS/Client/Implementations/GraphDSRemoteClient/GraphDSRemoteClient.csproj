@@ -152,11 +152,11 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Properties\DataSources\sones.Library.Commons.Security.SecurityToken.datasource" />
-    <None Include="Service References\sonesGraphDSRemoteAPI\RPCServiceContract1.wsdl" />
-    <None Include="Service References\sonesGraphDSRemoteAPI\sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI.SecurityToken.datasource">
+    <None Include="Service References\sonesGraphDSRemoteAPI\RPCServiceContract.wsdl" />
+    <None Include="Service References\sonesGraphDSRemoteAPI\sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI.ServiceAttributeDefinition.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\sonesGraphDSRemoteAPI\sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI.ServiceAttributeDefinition.datasource">
+    <None Include="Service References\sonesGraphDSRemoteAPI\sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI.ServiceBinaryPropertyContainer.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\sonesGraphDSRemoteAPI\sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI.ServiceBinaryPropertyDefinition.datasource">
@@ -174,10 +174,16 @@
     <None Include="Service References\sonesGraphDSRemoteAPI\sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI.ServiceIncomingEdgeDefinition.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\sonesGraphDSRemoteAPI\sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI.ServiceIncomingVerticesContainer.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\sonesGraphDSRemoteAPI\sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI.ServiceIndexDefinition.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\sonesGraphDSRemoteAPI\sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI.ServiceOutgoingEdgeDefinition.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\sonesGraphDSRemoteAPI\sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI.ServicePropertyContainer.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\sonesGraphDSRemoteAPI\sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI.ServicePropertyDefinition.datasource">
@@ -190,6 +196,9 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\sonesGraphDSRemoteAPI\sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI.ServiceUniqueDefinition.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\sonesGraphDSRemoteAPI\sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI.ServiceUnstructuredPropertyContainer.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\sonesGraphDSRemoteAPI\sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI.ServiceVertexInstance.datasource">
@@ -206,6 +215,9 @@
     <WCFMetadataStorage Include="Service References\sonesGraphDSRemoteAPI\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Service References\sonesGraphDSRemoteAPI\rpc.disco" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Service References\sonesGraphDSRemoteAPI\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
@@ -217,7 +229,6 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

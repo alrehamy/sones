@@ -14,7 +14,7 @@ namespace sones.GraphDS.GraphDSRemoteClient.TypeManagement
 
         internal RemoteUniqueDefinition(ServiceUniqueDefinition myUniqueDefinition, IServiceToken myServiceToken)
         {
-            this.UniquePropertyDefinitions = myUniqueDefinition.UniquePropertyDefinition.Select(x => new RemotePropertyDefinition(x, myServiceToken));
+            this.UniquePropertyDefinitions = myUniqueDefinition.UniquePropertyDefinition.Select(x => (IPropertyDefinition)new RemotePropertyDefinition(x, myServiceToken));
             this.DefiningVertexType = new RemoteVertexType(myUniqueDefinition.DefiningVertexType, myServiceToken);
             this.CorrespondingIndex = new RemoteIndexDefinition(myUniqueDefinition.CorrespondingIndex, myServiceToken);
         }

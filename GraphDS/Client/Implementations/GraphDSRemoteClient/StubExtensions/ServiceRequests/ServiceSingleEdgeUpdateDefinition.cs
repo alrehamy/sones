@@ -18,13 +18,13 @@ namespace sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI
                 ? null : myUpdateDefinition.UpdatedStructuredProperties.Updated.ToDictionary(k => k.Key, v => (object)v.Value);
 
             this.DeletedStructuredProperties = (myUpdateDefinition.UpdatedStructuredProperties.Deleted == null)
-                ? null : myUpdateDefinition.UpdatedStructuredProperties.Deleted.ToList();
+                ? null : myUpdateDefinition.UpdatedStructuredProperties.Deleted.ToArray();
 
             this.UpdatedUnstructuredProperties = (myUpdateDefinition.UpdatedUnstructuredProperties.Updated == null)
                 ? null : myUpdateDefinition.UpdatedUnstructuredProperties.Updated.ToDictionary(k => k.Key, v => (object)v.Value);
 
             this.DeletedUnstructuredProperties = (myUpdateDefinition.UpdatedUnstructuredProperties.Deleted == null)
-                ? null : myUpdateDefinition.UpdatedUnstructuredProperties.Deleted.ToList();
+                ? null : myUpdateDefinition.UpdatedUnstructuredProperties.Deleted.ToArray();
 
             this.SourceVertex = new ServiceVertexInformation(myUpdateDefinition.SourceVertex);
             this.TargetVertex = new ServiceVertexInformation(myUpdateDefinition.TargetVertex);

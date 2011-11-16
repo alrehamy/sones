@@ -9,7 +9,7 @@ namespace sones.GraphDS.GraphDSRemoteClient
 {
     internal interface IServiceToken
     {
-        SecurityToken SecurityToken { get; }
+        sones.Library.Commons.Security.SecurityToken SecurityToken { get; }
         Int64 TransactionToken { get; }
         VertexTypeService VertexTypeService { get; }
         VertexInstanceService VertexService { get; }

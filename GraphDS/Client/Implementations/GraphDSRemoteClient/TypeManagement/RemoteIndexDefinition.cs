@@ -27,7 +27,7 @@ namespace sones.GraphDS.GraphDSRemoteClient.TypeManagement
             this.IndexTypeName = mySvcIndexDefinition.IndexTypeName;
             this.Edition = mySvcIndexDefinition.Edition;
             this.IsUserdefined = mySvcIndexDefinition.IsUserdefined;
-            this._IndexedProperties = mySvcIndexDefinition.IndexedProperties;
+            this._IndexedProperties = mySvcIndexDefinition.IndexedProperties.ToList();
             this.VertexType = new RemoteVertexType(mySvcIndexDefinition.VertexType, myServiceToken);
             this.ID = mySvcIndexDefinition.ID;
             this.IsRange = mySvcIndexDefinition.IsRange;
@@ -51,7 +51,7 @@ namespace sones.GraphDS.GraphDSRemoteClient.TypeManagement
         {
             get
             {
-                return _ServiceToken.VertexTypeService.GetPropertyDefinitionsByNameListByVertexType(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, VertexType.Name, _IndexedProperties).Select(x => (IPropertyDefinition)new RemotePropertyDefinition(x, _ServiceToken)).ToList();
+                return _ServiceToken.VertexTypeService.GetPropertyDefinitionsByNameListByVertexType(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, VertexType.Name, _IndexedProperties.ToArray()).Select(x => (IPropertyDefinition)new RemotePropertyDefinition(x, _ServiceToken)).ToList();
             }
             internal set
             {

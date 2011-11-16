@@ -13,7 +13,7 @@ namespace sones.GraphDS.GraphDSRemoteClient.TypeManagement
         #region Data
 
         private IServiceToken _ServiceToken;
-        private List<String> _InIndices;
+        private String[] _InIndices;
 
         #endregion
 
@@ -58,11 +58,11 @@ namespace sones.GraphDS.GraphDSRemoteClient.TypeManagement
         {
             get
             {
-                return _ServiceToken.GraphDSService.DescribeIndicesByNames(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, RelatedType.Name, _InIndices).Select(x => new RemoteIndexDefinition(x, _ServiceToken));
+                return _ServiceToken.GraphDSService.DescribeIndicesByNames(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, RelatedType.Name, _InIndices).Select(x => (IIndexDefinition)new RemoteIndexDefinition(x, _ServiceToken));
             }
             internal set
             {
-                _InIndices = value.Select(x => x.Name).ToList();
+                _InIndices = value.Select(x => x.Name).ToArray();
             }
         }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="9154fe4a-9c11-476d-b904-8b6de382b344" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="415a462d-5f08-44c5-b257-3f29687ba557" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <EnableDataBinding>true</EnableDataBinding>
@@ -8,9 +8,7 @@
     <GenerateInternalTypes>false</GenerateInternalTypes>
     <GenerateMessageContracts>false</GenerateMessageContracts>
     <NamespaceMappings />
-    <CollectionMappings>
-      <CollectionMapping TypeName="System.Collections.Generic.List`1" Category="List" />
-    </CollectionMappings>
+    <CollectionMappings />
     <GenerateSerializableTypes>true</GenerateSerializableTypes>
     <Serializer>Auto</Serializer>
     <UseSerializerForFaults>true</UseSerializerForFaults>
@@ -20,10 +18,11 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:9970/rpc?wsdl" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://127.0.0.1:9970/rpc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="RPCServiceContract1.wsdl" MetadataType="Wsdl" ID="1124b235-a896-4ad6-97ad-b7bcc36a5f72" SourceId="1" SourceUrl="http://localhost:9970/rpc?wsdl" />
+    <MetadataFile FileName="RPCServiceContract.wsdl" MetadataType="Wsdl" ID="ffce7ca0-43a8-425e-9ba5-0c294bd492a1" SourceId="1" SourceUrl="http://127.0.0.1:9970/rpc?wsdl" />
+    <MetadataFile FileName="rpc.disco" MetadataType="Disco" ID="de121468-093a-456d-bb48-87fc7cb1ee95" SourceId="1" SourceUrl="http://127.0.0.1:9970/rpc?disco" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

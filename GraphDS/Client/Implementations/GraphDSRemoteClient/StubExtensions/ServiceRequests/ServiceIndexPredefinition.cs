@@ -14,7 +14,7 @@ namespace sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI
             this.TypeName = myIndexPredefinition.TypeName;
             this.Name = myIndexPredefinition.Name;
             this.IndexOptions = myIndexPredefinition.IndexOptions;
-            this.Properties = myIndexPredefinition.Properties.ToList();
+            this.Properties = myIndexPredefinition.Properties.ToArray();
             this.VertexTypeName = myIndexPredefinition.VertexTypeName;
             this.Comment = myIndexPredefinition.Comment;
         }

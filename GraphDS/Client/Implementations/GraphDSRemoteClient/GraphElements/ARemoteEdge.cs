@@ -72,10 +72,10 @@ namespace sones.GraphDS.GraphDSRemoteClient.GraphElements
             return _ServiceToken.EdgeService.GetCountOfPropertiesByEdgeInstance(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceEdgeInstance(this));
         }
 
-        public IEnumerable<Tuple<long, IComparable>> GetAllProperties(PropertyHyperGraphFilter.GraphElementStructuredPropertyFilter myFilter = null)
+        public IEnumerable<PropertyContainer> GetAllProperties(PropertyHyperGraphFilter.GraphElementStructuredPropertyFilter myFilter = null)
         {
             return _ServiceToken.EdgeService.GetAllPropertiesByEdgeInstance(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceEdgeInstance(this))
-                .Select(x => new Tuple<long, IComparable>(x.Item1, (IComparable)x.Item2));
+                .Select(x => new PropertyContainer { PropertyID = x.PropertyID, Property = (IComparable)x.Property });
         }
 
         public string GetPropertyAsString(long myPropertyID)
@@ -98,9 +98,9 @@ namespace sones.GraphDS.GraphDSRemoteClient.GraphElements
             return _ServiceToken.EdgeService.GetCountOfUnstructuredPropertiesByEdgeInstance(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceEdgeInstance(this));
         }
 
-        public IEnumerable<Tuple<string, object>> GetAllUnstructuredProperties(PropertyHyperGraphFilter.GraphElementUnStructuredPropertyFilter myFilter = null)
+        public IEnumerable<UnstructuredPropertyContainer> GetAllUnstructuredProperties(PropertyHyperGraphFilter.GraphElementUnStructuredPropertyFilter myFilter = null)
         {
-            return _ServiceToken.EdgeService.GetAllUnstructuredPropertiesByEdgeInstance(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceEdgeInstance(this));
+            return _ServiceToken.EdgeService.GetAllUnstructuredPropertiesByEdgeInstance(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceEdgeInstance(this)).Select(_ => new UnstructuredPropertyContainer { PropertyName = _.PropertyName, Property = _.Property } ).ToList();
         }
 
         public string GetUnstructuredPropertyAsString(string myPropertyName)

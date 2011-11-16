@@ -28,7 +28,7 @@ namespace sones.GraphDS.GraphDSRemoteClient.GraphElements
 		protected override IEnumerable<ARemoteBaseType> RetrieveChildrenTypes()
 		{
 			if (!HasChildTypes)
-				return Enumerable.Empty<RemoteEdgeType>();
+                return Enumerable.Empty<ARemoteBaseType>();
 
 			var vertices = _ServiceToken.EdgeTypeService.ChildrenEdgeTypes(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceEdgeType(this));
 
@@ -47,32 +47,32 @@ namespace sones.GraphDS.GraphDSRemoteClient.GraphElements
 
 		public IEnumerable<IEdgeType> GetDescendantEdgeTypes()
 		{
-            return _ServiceToken.EdgeTypeService.GetDescendantEdgeTypes(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceEdgeType(this)).Select(x => new RemoteEdgeType(x, _ServiceToken));
+            return _ServiceToken.EdgeTypeService.GetDescendantEdgeTypes(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceEdgeType(this)).Select(x => (IEdgeType)new RemoteEdgeType(x, _ServiceToken));
 		}
 
 		public IEnumerable<IEdgeType> GetDescendantEdgeTypesAndSelf()
 		{
-            return _ServiceToken.EdgeTypeService.GetDescendantEdgeTypesAndSelf(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceEdgeType(this)).Select(x => new RemoteEdgeType(x, _ServiceToken));
+            return _ServiceToken.EdgeTypeService.GetDescendantEdgeTypesAndSelf(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceEdgeType(this)).Select(x => (IEdgeType)new RemoteEdgeType(x, _ServiceToken));
 		}
 
         public IEnumerable<IEdgeType> GetAncestorEdgeTypes()
 		{
-            return _ServiceToken.EdgeTypeService.GetAncestorEdgeTypes(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceEdgeType(this)).Select(x => new RemoteEdgeType(x, _ServiceToken));
+            return _ServiceToken.EdgeTypeService.GetAncestorEdgeTypes(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceEdgeType(this)).Select(x => (IEdgeType)new RemoteEdgeType(x, _ServiceToken));
 		}
 
         public IEnumerable<IEdgeType> GetAncestorEdgeTypesAndSelf()
 		{
-            return _ServiceToken.EdgeTypeService.GetAncestorEdgeTypesAndSelf(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceEdgeType(this)).Select(x => new RemoteEdgeType(x, _ServiceToken));
+            return _ServiceToken.EdgeTypeService.GetAncestorEdgeTypesAndSelf(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceEdgeType(this)).Select(x => (IEdgeType)new RemoteEdgeType(x, _ServiceToken));
 		}
 
         public IEnumerable<IEdgeType> GetKinsmenEdgeTypes()
 		{
-            return _ServiceToken.EdgeTypeService.GetKinsmenEdgeTypes(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceEdgeType(this)).Select(x => new RemoteEdgeType(x, _ServiceToken));
+            return _ServiceToken.EdgeTypeService.GetKinsmenEdgeTypes(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceEdgeType(this)).Select(x => (IEdgeType)new RemoteEdgeType(x, _ServiceToken));
 		}
 
         public IEnumerable<IEdgeType> GetKinsmenEdgeTypesAndSelf()
 		{
-            return _ServiceToken.EdgeTypeService.GetKinsmenEdgeTypesAndSelf(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceEdgeType(this)).Select(x => new RemoteEdgeType(x, _ServiceToken));
+            return _ServiceToken.EdgeTypeService.GetKinsmenEdgeTypesAndSelf(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceEdgeType(this)).Select(x => (IEdgeType)new RemoteEdgeType(x, _ServiceToken));
 		}
 
         public IEnumerable<IEdgeType> ChildrenEdgeTypes
@@ -142,39 +142,39 @@ namespace sones.GraphDS.GraphDSRemoteClient.GraphElements
 
 		public override IEnumerable<IBaseType> GetDescendantTypes()
 		{
-            return GetDescendantEdgeTypes();
+            return GetDescendantEdgeTypes().Select(_ => (IBaseType)_);
 		}
 
 		public override IEnumerable<IBaseType> GetDescendantTypesAndSelf()
 		{
-            return GetDescendantEdgeTypesAndSelf();
+            return GetDescendantEdgeTypesAndSelf().Select(_ => (IBaseType)_);
 		}
 
 		public override IEnumerable<IBaseType> GetAncestorTypes()
 		{
-            return GetAncestorEdgeTypes();
+            return GetAncestorEdgeTypes().Select(_ => (IBaseType)_);
 		}
 
 		public override IEnumerable<IBaseType> GetAncestorTypesAndSelf()
 		{
-            return GetAncestorEdgeTypesAndSelf();
+            return GetAncestorEdgeTypesAndSelf().Select(_ => (IBaseType)_);
 		}
 
 		public override IEnumerable<IBaseType> GetKinsmenTypes()
 		{
-            return GetKinsmenEdgeTypes();
+            return GetKinsmenEdgeTypes().Select(_ => (IBaseType)_);
 		}
 
 		public override IEnumerable<IBaseType> GetKinsmenTypesAndSelf()
 		{
-            return GetKinsmenEdgeTypesAndSelf();
+            return GetKinsmenEdgeTypesAndSelf().Select(_ => (IBaseType)_);
 		}
 
 		public override IEnumerable<IBaseType> ChildrenTypes
 		{
 			get
             {
-                return RetrieveChildrenTypes();
+                return RetrieveChildrenTypes().Select(_ => (IBaseType)_);
             }
 		}
 
@@ -242,13 +242,13 @@ namespace sones.GraphDS.GraphDSRemoteClient.GraphElements
 		public override IEnumerable<IPropertyDefinition> GetPropertyDefinitions(bool myIncludeAncestorDefinitions)
 		{
             return _ServiceToken.EdgeTypeService.GetPropertyDefinitionsByEdgeType(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, this.Name, myIncludeAncestorDefinitions)
-                .Select(x => new RemotePropertyDefinition(x, _ServiceToken));
+                .Select(x => (IPropertyDefinition)new RemotePropertyDefinition(x, _ServiceToken));
 		}
 
 		public override IEnumerable<IPropertyDefinition> GetPropertyDefinitions(IEnumerable<string> myPropertyNames)
 		{
-            return _ServiceToken.EdgeTypeService.GetPropertyDefinitionsByNameListByEdgeType(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, this.Name, myPropertyNames.ToList())
-                .Select(x => new RemotePropertyDefinition(x, _ServiceToken));
+            return _ServiceToken.EdgeTypeService.GetPropertyDefinitionsByNameListByEdgeType(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, this.Name, myPropertyNames.ToArray())
+                .Select(x => (IPropertyDefinition)new RemotePropertyDefinition(x, _ServiceToken));
 		}
 
 		#endregion

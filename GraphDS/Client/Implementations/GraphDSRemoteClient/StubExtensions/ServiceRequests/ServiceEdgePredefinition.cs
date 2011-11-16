@@ -14,16 +14,16 @@ namespace sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI
             this.Comment = myEdgePredefinition.Comment;
 
             this.ContainedEdges = (myEdgePredefinition.ContainedEdges == null)
-                ? null : myEdgePredefinition.ContainedEdges.Select(x => new ServiceEdgePredefinition(x)).ToList();
+                ? null : myEdgePredefinition.ContainedEdges.Select(x => new ServiceEdgePredefinition(x)).ToArray();
 
             this.VertexIDsByID = (myEdgePredefinition.VertexIDsByVertexTypeID == null)
-                ? null : myEdgePredefinition.VertexIDsByVertexTypeID.Select(x => new Tuple<Int64, List<Int64>>(x.Key, x.Value.ToList())).ToList();
+                ? null : myEdgePredefinition.VertexIDsByVertexTypeID.ToDictionary(_ => _.Key, _ =>_.Value.ToArray());
 
             this.StructuredProperties = (myEdgePredefinition.StructuredProperties == null)
-                ? null : myEdgePredefinition.StructuredProperties.Select(x => new StructuredProperty(x.Key, x.Value)).ToList();
+                ? null : myEdgePredefinition.StructuredProperties.Select(x => new StructuredProperty(x.Key, x.Value)).ToArray();
 
             this.UnstructuredProperties = (myEdgePredefinition.UnstructuredProperties == null)
-                ? null : myEdgePredefinition.UnstructuredProperties.Select(x => new UnstructuredProperty(x.Key, x.Value)).ToList();
+                ? null : myEdgePredefinition.UnstructuredProperties.Select(x => new UnstructuredProperty(x.Key, x.Value)).ToArray();
         }
     }
 }

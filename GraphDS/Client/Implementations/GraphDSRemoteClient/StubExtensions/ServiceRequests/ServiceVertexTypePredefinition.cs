@@ -17,22 +17,22 @@ namespace sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI
             this.Comment = myVertexTypePredefinition.Comment;
 
             this.Uniques = (myVertexTypePredefinition.Uniques == null)
-                ? null : myVertexTypePredefinition.Uniques.Select(x => new ServiceUniquePredefinition(x)).ToList();
+                ? null : myVertexTypePredefinition.Uniques.Select(x => new ServiceUniquePredefinition(x)).ToArray();
 
             this.Indices = (myVertexTypePredefinition.Indices == null)
-                ? null : myVertexTypePredefinition.Indices.Select(x => new ServiceIndexPredefinition(x)).ToList();
+                ? null : myVertexTypePredefinition.Indices.Select(x => new ServiceIndexPredefinition(x)).ToArray();
             
             this.Properties = (myVertexTypePredefinition.Properties == null)
-                ? null : myVertexTypePredefinition.Properties.Select(x => new ServicePropertyPredefinition(x)).ToList();
+                ? null : myVertexTypePredefinition.Properties.Select(x => new ServicePropertyPredefinition(x)).ToArray();
 
             this.BinaryProperties = (myVertexTypePredefinition.BinaryProperties == null)
-                ? null : myVertexTypePredefinition.BinaryProperties.Select(x => new ServiceBinaryPropertyPredefinition(x)).ToList();
+                ? null : myVertexTypePredefinition.BinaryProperties.Select(x => new ServiceBinaryPropertyPredefinition(x)).ToArray();
 
             this.OutgoingEdges = (myVertexTypePredefinition.OutgoingEdges == null)
-                ? null : myVertexTypePredefinition.OutgoingEdges.Select(x => new ServiceOutgoingEdgePredefinition(x)).ToList();
+                ? null : myVertexTypePredefinition.OutgoingEdges.Select(x => new ServiceOutgoingEdgePredefinition(x)).ToArray();
 
             this.IncomingEdges = (myVertexTypePredefinition.IncomingEdges == null)
-                ? null : myVertexTypePredefinition.IncomingEdges.Select(x => new ServiceIncomingEdgePredefinition(x)).ToList();
+                ? null : myVertexTypePredefinition.IncomingEdges.Select(x => new ServiceIncomingEdgePredefinition(x)).ToArray();
         }
     }
 }

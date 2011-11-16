@@ -11,7 +11,7 @@ namespace sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI
         internal ServiceDeletePayload(RequestDelete myRequestDelete)
         {
             this.ToBeDeletedAttributes = (myRequestDelete.ToBeDeletedAttributes == null)
-                ? null : myRequestDelete.ToBeDeletedAttributes.ToList();
+                ? null : myRequestDelete.ToBeDeletedAttributes.ToArray();
         }
     }
 }

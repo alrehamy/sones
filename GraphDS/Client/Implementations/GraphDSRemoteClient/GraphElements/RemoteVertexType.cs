@@ -36,7 +36,7 @@ namespace sones.GraphDS.GraphDSRemoteClient.GraphElements
         protected override IEnumerable<ARemoteBaseType> RetrieveChildrenTypes()
         {
             if (!HasChildTypes)
-                return Enumerable.Empty<RemoteVertexType>();
+                return Enumerable.Empty<ARemoteBaseType>();
 
             var vertices = _ServiceToken.VertexTypeService.ChildrenVertexTypes(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexType(this));
 
@@ -61,37 +61,37 @@ namespace sones.GraphDS.GraphDSRemoteClient.GraphElements
         public IEnumerable<IVertexType> GetDescendantVertexTypes()
         {
             return _ServiceToken.VertexTypeService.GetDescendantVertexTypes(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexType(this))
-                .Select(x => new RemoteVertexType(x, _ServiceToken));
+                .Select(x => (IVertexType)new RemoteVertexType(x, _ServiceToken));
         }
 
         public IEnumerable<IVertexType> GetDescendantVertexTypesAndSelf()
         {
             return _ServiceToken.VertexTypeService.GetDescendantVertexTypesAndSelf(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexType(this))
-                .Select(x => new RemoteVertexType(x, _ServiceToken));
+                .Select(x => (IVertexType)new RemoteVertexType(x, _ServiceToken));
         }
 
         public IEnumerable<IVertexType> GetAncestorVertexTypes()
         {
             return _ServiceToken.VertexTypeService.GetAncestorVertexTypes(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexType(this))
-                .Select(x => new RemoteVertexType(x, _ServiceToken));
+                .Select(x => (IVertexType)new RemoteVertexType(x, _ServiceToken));
         }
 
         public IEnumerable<IVertexType> GetAncestorVertexTypesAndSelf()
         {
             return _ServiceToken.VertexTypeService.GetAncestorVertexTypesAndSelf(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexType(this))
-                .Select(x => new RemoteVertexType(x, _ServiceToken));
+                .Select(x => (IVertexType)new RemoteVertexType(x, _ServiceToken));
         }
 
         public IEnumerable<IVertexType> GetKinsmenVertexTypes()
         {
             return _ServiceToken.VertexTypeService.GetKinsmenVertexTypes(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexType(this))
-                .Select(x => new RemoteVertexType(x, _ServiceToken));
+                .Select(x => (IVertexType)new RemoteVertexType(x, _ServiceToken));
         }
 
         public IEnumerable<IVertexType> GetKinsmenVertexTypesAndSelf()
         {
             return _ServiceToken.VertexTypeService.GetKinsmenVertexTypesAndSelf(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexType(this))
-                .Select(x => new RemoteVertexType(x, _ServiceToken));
+                .Select(x => (IVertexType)new RemoteVertexType(x, _ServiceToken));
         }
 
         public IEnumerable<IVertexType> ChildrenVertexTypes
@@ -124,7 +124,7 @@ namespace sones.GraphDS.GraphDSRemoteClient.GraphElements
         public IEnumerable<IBinaryPropertyDefinition> GetBinaryProperties(bool myIncludeAncestorDefinitions)
         {
             return _ServiceToken.VertexTypeService.GetBinaryPropertyDefinitions(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexType(this), myIncludeAncestorDefinitions)
-                .Select(x => new RemoteBinaryPropertyDefinition(x, _ServiceToken));
+                .Select(x => (IBinaryPropertyDefinition)new RemoteBinaryPropertyDefinition(x, _ServiceToken));
         }
 
         public bool HasIncomingEdge(string myEdgeName)
@@ -147,7 +147,7 @@ namespace sones.GraphDS.GraphDSRemoteClient.GraphElements
         public IEnumerable<IIncomingEdgeDefinition> GetIncomingEdgeDefinitions(bool myIncludeAncestorDefinitions)
         {
             return _ServiceToken.VertexTypeService.GetIncomingEdgeDefinitions(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexType(this), myIncludeAncestorDefinitions)
-                .Select(x => new RemoteIncomingEdgeDefinition(x, _ServiceToken));
+                .Select(x => (IIncomingEdgeDefinition)new RemoteIncomingEdgeDefinition(x, _ServiceToken));
         }
 
         public bool HasOutgoingEdge(string myEdgeName)
@@ -170,7 +170,7 @@ namespace sones.GraphDS.GraphDSRemoteClient.GraphElements
         public IEnumerable<IOutgoingEdgeDefinition> GetOutgoingEdgeDefinitions(bool myIncludeAncestorDefinitions)
         {
             return _ServiceToken.VertexTypeService.GetOutgoingEdgeDefinitionsByVertexType(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexType(this), myIncludeAncestorDefinitions)
-                .Select(x => new RemoteOutgoingEdgeDefinition(x, _ServiceToken));
+                .Select(x => (IOutgoingEdgeDefinition)new RemoteOutgoingEdgeDefinition(x, _ServiceToken));
         }
 
         public bool HasUniqueDefinitions(bool myIncludeAncestorDefinitions)
@@ -181,7 +181,7 @@ namespace sones.GraphDS.GraphDSRemoteClient.GraphElements
         public IEnumerable<IUniqueDefinition> GetUniqueDefinitions(bool myIncludeAncestorDefinitions)
         {
             return _ServiceToken.VertexTypeService.GetUniqueDefinitions(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexType(this), myIncludeAncestorDefinitions)
-                .Select(x => new RemoteUniqueDefinition(x, _ServiceToken));
+                .Select(x => (IUniqueDefinition)new RemoteUniqueDefinition(x, _ServiceToken));
         }
 
         public bool HasIndexDefinitions(bool myIncludeAncestorDefinitions)
@@ -192,7 +192,7 @@ namespace sones.GraphDS.GraphDSRemoteClient.GraphElements
         public IEnumerable<IIndexDefinition> GetIndexDefinitions(bool myIncludeAncestorDefinitions)
         {
             return _ServiceToken.VertexTypeService.GetIndexDefinitions(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexType(this), myIncludeAncestorDefinitions)
-                .Select(x => new RemoteIndexDefinition(x, _ServiceToken));
+                .Select(x => (IIndexDefinition)new RemoteIndexDefinition(x, _ServiceToken));
         }
 
         #endregion
@@ -246,37 +246,37 @@ namespace sones.GraphDS.GraphDSRemoteClient.GraphElements
 
         public override IEnumerable<IBaseType> GetDescendantTypes()
         {
-            return GetDescendantVertexTypes();
+            return GetDescendantVertexTypes().Select(_ => (IBaseType)_);
         }
 
         public override IEnumerable<IBaseType> GetDescendantTypesAndSelf()
         {
-            return GetDescendantVertexTypesAndSelf();
+            return GetDescendantVertexTypesAndSelf().Select(_ => (IBaseType)_);
         }
 
         public override IEnumerable<IBaseType> GetAncestorTypes()
         {
-            return GetAncestorVertexTypes();
+            return GetAncestorVertexTypes().Select(_ => (IBaseType)_);
         }
 
         public override IEnumerable<IBaseType> GetAncestorTypesAndSelf()
         {
-            return GetAncestorVertexTypesAndSelf();
+            return GetAncestorVertexTypesAndSelf().Select(_ => (IBaseType)_);
         }
 
         public override IEnumerable<IBaseType> GetKinsmenTypes()
         {
-            return GetKinsmenVertexTypes();
+            return GetKinsmenVertexTypes().Select(_ => (IBaseType)_);
         }
 
         public override IEnumerable<IBaseType> GetKinsmenTypesAndSelf()
         {
-            return GetKinsmenVertexTypesAndSelf();
+            return GetKinsmenVertexTypesAndSelf().Select(_ => (IBaseType)_);
         }
 
         public override IEnumerable<IBaseType> ChildrenTypes
         {
-            get { return RetrieveChildrenTypes(); }
+            get { return RetrieveChildrenTypes().Select(_ => (IBaseType)_); }
         }
 
         public override IBaseType ParentType
@@ -342,13 +342,13 @@ namespace sones.GraphDS.GraphDSRemoteClient.GraphElements
         public override IEnumerable<IPropertyDefinition> GetPropertyDefinitions(bool myIncludeAncestorDefinitions)
         {
             return _ServiceToken.VertexTypeService.GetPropertyDefinitionsByVertexType(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, this.Name, myIncludeAncestorDefinitions)
-                .Select(x => new RemotePropertyDefinition(x, _ServiceToken));
+                .Select(x => (IPropertyDefinition)new RemotePropertyDefinition(x, _ServiceToken));
         }
 
         public override IEnumerable<IPropertyDefinition> GetPropertyDefinitions(IEnumerable<string> myPropertyNames)
         {
-            return _ServiceToken.VertexTypeService.GetPropertyDefinitionsByNameListByVertexType(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, this.Name, myPropertyNames.ToList())
-                .Select(x => new RemotePropertyDefinition(x, _ServiceToken));
+            return _ServiceToken.VertexTypeService.GetPropertyDefinitionsByNameListByVertexType(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, this.Name, myPropertyNames.ToArray())
+                .Select(x => (IPropertyDefinition)new RemotePropertyDefinition(x, _ServiceToken));
         }
 
         #endregion

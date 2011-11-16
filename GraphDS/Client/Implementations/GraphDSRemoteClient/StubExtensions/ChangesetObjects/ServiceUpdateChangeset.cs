@@ -13,13 +13,13 @@ namespace sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI
             this.Comment = myRequestUpdate.UpdatedComment;
             this.Edition = myRequestUpdate.UpdatedEdition;
 
-            this.AddedElementsToCollectionProperties = new Dictionary<string,List<object>>();
+            this.AddedElementsToCollectionProperties = new Dictionary<string, object[]>();
             foreach(var item in myRequestUpdate.AddedElementsToCollectionProperties)
-                this.AddedElementsToCollectionProperties.Add(item.Key, item.Value.Select(x => (object)x).ToList());
+                this.AddedElementsToCollectionProperties.Add(item.Key, item.Value.Select(x => (object)x).ToArray());
 
-            this.RemovedElementsFromCollectionProperties = new Dictionary<string,List<object>>();
+            this.RemovedElementsFromCollectionProperties = new Dictionary<string, object[]>();
             foreach(var item in myRequestUpdate.RemovedElementsFromCollectionProperties)
-                this.RemovedElementsFromCollectionProperties.Add(item.Key, item.Value.Select(x => (object)x).ToList());
+                this.RemovedElementsFromCollectionProperties.Add(item.Key, item.Value.Select(x => (object)x).ToArray());
 
             this.AddedElementsToCollectionEdges = new Dictionary<string,ServiceEdgePredefinition>();
             foreach (var item in myRequestUpdate.AddedElementsToCollectionEdges)
@@ -32,11 +32,11 @@ namespace sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI
             this.UpdatedUnstructuredProperties = myRequestUpdate.UpdatedUnstructuredProperties.ToDictionary(k => k.Key, v => v.Value);
             this.UpdatedStructuredProperties = myRequestUpdate.UpdatedStructuredProperties.ToDictionary(k => k.Key, v => (object)v.Value);
 
-            this.UpdatedOutgoingEdges = myRequestUpdate.UpdateOutgoingEdges.Select(x => new ServiceEdgePredefinition(x)).ToList();
-            this.UpdateOutgoingEdgesProperties = myRequestUpdate.UpdateOutgoingEdgesProperties.Select(x => new ServiceSingleEdgeUpdateDefinition(x)).ToList();
+            this.UpdatedOutgoingEdges = myRequestUpdate.UpdateOutgoingEdges.Select(x => new ServiceEdgePredefinition(x)).ToArray();
+            this.UpdateOutgoingEdgesProperties = myRequestUpdate.UpdateOutgoingEdgesProperties.Select(x => new ServiceSingleEdgeUpdateDefinition(x)).ToArray();
 
             this.UpdatedUnknownProperties = myRequestUpdate.UpdatedUnknownProperties.ToDictionary(k => k.Key, v => v.Value);
-            this.RemovedAttributes = myRequestUpdate.RemovedAttributes;
+            this.RemovedAttributes = myRequestUpdate.RemovedAttributes.ToArray();
         }
     }
 }

@@ -10,7 +10,7 @@ namespace sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI
     {
         internal ServiceCollectionLiteralExpression(CollectionLiteralExpression myExpression)
         {
-            this.CollectionLiteral = myExpression.CollectionLiteral.Select(x => (object)x).ToList();
+            this.CollectionLiteral = myExpression.CollectionLiteral.Select(x => (object)x).ToArray();
         }
     }
 }

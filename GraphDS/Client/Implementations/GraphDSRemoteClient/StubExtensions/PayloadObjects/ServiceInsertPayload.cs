@@ -15,13 +15,13 @@ namespace sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI
             this.Edition = myRequestInsertVertex.Edition;
             
             this.StructuredProperties = (myRequestInsertVertex.StructuredProperties == null)
-                ? null : myRequestInsertVertex.StructuredProperties.Select(x => new StructuredProperty(x.Key, x.Value)).ToList();
+                ? null : myRequestInsertVertex.StructuredProperties.Select(x => new StructuredProperty(x.Key, x.Value)).ToArray();
 
             this.UnstructuredProperties = (myRequestInsertVertex.UnstructuredProperties == null)
-                ? null : myRequestInsertVertex.UnstructuredProperties.Select(x => new UnstructuredProperty(x.Key, x.Value)).ToList();
+                ? null : myRequestInsertVertex.UnstructuredProperties.Select(x => new UnstructuredProperty(x.Key, x.Value)).ToArray();
 
             this.Edges = (myRequestInsertVertex.OutgoingEdges == null)
-                ? null : myRequestInsertVertex.OutgoingEdges.Select(x => new ServiceEdgePredefinition(x)).ToList();
+                ? null : myRequestInsertVertex.OutgoingEdges.Select(x => new ServiceEdgePredefinition(x)).ToArray();
         }
     }
 }

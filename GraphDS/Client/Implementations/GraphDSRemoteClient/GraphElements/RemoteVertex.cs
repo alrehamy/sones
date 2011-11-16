@@ -79,7 +79,7 @@ namespace sones.GraphDS.GraphDSRemoteClient.GraphElements
             get
             {
                 return _ServiceToken.VertexService.GetAllPropertiesByVertexInstance(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexInstance(this))
-                    .ToDictionary(k => k.Item1, v => (IComparable)v.Item2);
+                    .ToDictionary(k => k.PropertyID, v => (IComparable)v.Property);
             }
         }
 
@@ -88,7 +88,7 @@ namespace sones.GraphDS.GraphDSRemoteClient.GraphElements
             get
             {
                 return _ServiceToken.VertexService.GetAllUnstructuredPropertiesByVertexInstance(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexInstance(this))
-                    .ToDictionary(k => k.Item1, v => v.Item2);
+                    .ToDictionary(k => k.PropertyName, v => v.Property);
             }
         }
 
@@ -102,16 +102,16 @@ namespace sones.GraphDS.GraphDSRemoteClient.GraphElements
             return _ServiceToken.VertexService.HasIncomingVertices(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexInstance(this), myVertexTypeID, myEdgePropertyID);
         }
 
-        public IEnumerable<Tuple<long, long, IEnumerable<IVertex>>> GetAllIncomingVertices(PropertyHyperGraphFilter.IncomingVerticesFilter myFilter = null)
+        public IEnumerable<IncomingVerticesContainer> GetAllIncomingVertices(PropertyHyperGraphFilter.IncomingVerticesFilter myFilter = null)
         {
             return _ServiceToken.VertexService.GetAllIncomingVertices(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexInstance(this))
-                .Select(x => new Tuple<long, long, IEnumerable<IVertex>>(x.Item1, x.Item2, x.Item3.Select(y => new RemoteVertex(y, _ServiceToken))));
+                .Select(x => new IncomingVerticesContainer { VertexTypeID = x.VertexTypeID, EdgePropertyID = x.EdgePropertyID, IncomingVertices = x.IncomingVertices.Select(y => (IVertex)new RemoteVertex(y, _ServiceToken)) });
         }
 
         public IEnumerable<IVertex> GetIncomingVertices(long myVertexTypeID, long myEdgePropertyID)
         {
             return _ServiceToken.VertexService.GetIncomingVertices(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexInstance(this), myVertexTypeID, myEdgePropertyID)
-                .Select(x => new RemoteVertex(x, _ServiceToken));
+                .Select(x => (IVertex)new RemoteVertex(x, _ServiceToken));
         }
 
         public bool HasOutgoingEdge(long myEdgePropertyID)
@@ -119,28 +119,28 @@ namespace sones.GraphDS.GraphDSRemoteClient.GraphElements
             return _ServiceToken.VertexService.HasOutgoingEdgeByVertexInstance(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexInstance(this), myEdgePropertyID);
         }
 
-        public IEnumerable<Tuple<long, IEdge>> GetAllOutgoingEdges(PropertyHyperGraphFilter.OutgoingEdgeFilter myFilter = null)
+        public IEnumerable<EdgeContainer> GetAllOutgoingEdges(PropertyHyperGraphFilter.OutgoingEdgeFilter myFilter = null)
         {
             return _ServiceToken.VertexService.GetAllOutgoingEdges(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexInstance(this))
                 .Select(x =>
                     {
                         if (x is ServiceSingleEdgeInstance)
-                            return new Tuple<long, IEdge>(x.EdgePropertyID.Value, new RemoteSingleEdge((ServiceSingleEdgeInstance)x, _ServiceToken));
+                            return new EdgeContainer { PropertyID = x.EdgePropertyID.Value, Edge = new RemoteSingleEdge((ServiceSingleEdgeInstance)x, _ServiceToken) };
                         else
-                            return new Tuple<long, IEdge>(x.EdgePropertyID.Value, new RemoteHyperEdge((ServiceHyperEdgeInstance)x, _ServiceToken));
+                            return new EdgeContainer { PropertyID = x.EdgePropertyID.Value, Edge = new RemoteHyperEdge((ServiceHyperEdgeInstance)x, _ServiceToken) };
                     });
         }
 
-        public IEnumerable<Tuple<long, IHyperEdge>> GetAllOutgoingHyperEdges(PropertyHyperGraphFilter.OutgoingHyperEdgeFilter myFilter = null)
+        public IEnumerable<HyperEdgeContainer> GetAllOutgoingHyperEdges(PropertyHyperGraphFilter.OutgoingHyperEdgeFilter myFilter = null)
         {
             return _ServiceToken.VertexService.GetAllOutgoingHyperEdges(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexInstance(this))
-                .Select(x => new Tuple<long, IHyperEdge>(x.EdgePropertyID.Value, new RemoteHyperEdge(x, _ServiceToken)));
+                .Select(x => new HyperEdgeContainer {  PropertyID = x.EdgePropertyID.Value, Edge = new RemoteHyperEdge(x, _ServiceToken) });
         }
 
-        public IEnumerable<Tuple<long, ISingleEdge>> GetAllOutgoingSingleEdges(PropertyHyperGraphFilter.OutgoingSingleEdgeFilter myFilter = null)
+        public IEnumerable<SingleEdgeContainer> GetAllOutgoingSingleEdges(PropertyHyperGraphFilter.OutgoingSingleEdgeFilter myFilter = null)
         {
             return _ServiceToken.VertexService.GetAllOutgoingSingleEdges(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexInstance(this))
-                .Select(x => new Tuple<long, ISingleEdge>(x.EdgePropertyID.Value, new RemoteSingleEdge(x, _ServiceToken)));
+                .Select(x => new SingleEdgeContainer { PropertyID = x.EdgePropertyID.Value, Edge = new RemoteSingleEdge(x, _ServiceToken) } );
         }
 
         public IEdge GetOutgoingEdge(long myEdgePropertyID)
@@ -171,9 +171,9 @@ namespace sones.GraphDS.GraphDSRemoteClient.GraphElements
             return _ServiceToken.StreamedService.GetBinaryProperty(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexInstance(this), myPropertyID);
         }
 
-        public IEnumerable<Tuple<long, Stream>> GetAllBinaryProperties(PropertyHyperGraphFilter.BinaryPropertyFilter myFilter = null)
+        public IEnumerable<BinaryPropertyContainer> GetAllBinaryProperties(PropertyHyperGraphFilter.BinaryPropertyFilter myFilter = null)
         {
-            return _ServiceToken.StreamedService.GetAllBinaryProperties(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexInstance(this)).ToList();
+            return _ServiceToken.StreamedService.GetAllBinaryProperties(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexInstance(this)).Select(_ => new BinaryPropertyContainer { PropertyID = _.PropertyID, BinaryPropery = _.BinaryPropery}).ToList();
         }
 
         public T GetProperty<T>(long myPropertyID)
@@ -196,10 +196,10 @@ namespace sones.GraphDS.GraphDSRemoteClient.GraphElements
             return _ServiceToken.VertexService.GetCountOfPropertiesByVertexInstance(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexInstance(this));
         }
 
-        public IEnumerable<Tuple<long, IComparable>> GetAllProperties(PropertyHyperGraphFilter.GraphElementStructuredPropertyFilter myFilter = null)
+        public IEnumerable<PropertyContainer> GetAllProperties(PropertyHyperGraphFilter.GraphElementStructuredPropertyFilter myFilter = null)
         {
             return _ServiceToken.VertexService.GetAllPropertiesByVertexInstance(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexInstance(this))
-                .Select(x => new Tuple<long, IComparable>(x.Item1, (IComparable)x.Item2));
+                .Select(x => new PropertyContainer {  PropertyID = x.PropertyID,  Property = (IComparable)x.Property });
         }
 
         public string GetPropertyAsString(long myPropertyID)
@@ -222,9 +222,9 @@ namespace sones.GraphDS.GraphDSRemoteClient.GraphElements
             return _ServiceToken.VertexService.GetCountOfUnstructuredPropertiesByVertexInstance(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexInstance(this));
         }
 
-        public IEnumerable<Tuple<string, object>> GetAllUnstructuredProperties(PropertyHyperGraphFilter.GraphElementUnStructuredPropertyFilter myFilter = null)
+        public IEnumerable<UnstructuredPropertyContainer> GetAllUnstructuredProperties(PropertyHyperGraphFilter.GraphElementUnStructuredPropertyFilter myFilter = null)
         {
-            return _ServiceToken.VertexService.GetAllUnstructuredPropertiesByVertexInstance(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexInstance(this));
+            return _ServiceToken.VertexService.GetAllUnstructuredPropertiesByVertexInstance(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, new ServiceVertexInstance(this)).Select(_ => new UnstructuredPropertyContainer { PropertyName = _.PropertyName, Property = _.Property}).ToList();
         }
 
         public string GetUnstructuredPropertyAsString(string myPropertyName)

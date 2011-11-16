@@ -16,7 +16,7 @@ namespace sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI
             this.Comment = myEdgeTypePredefinition.Comment;
 
             this.Properties = (myEdgeTypePredefinition.Properties == null)
-                ? null : myEdgeTypePredefinition.Properties.Select(x => new ServicePropertyPredefinition(x)).ToList();
+                ? null : myEdgeTypePredefinition.Properties.Select(x => new ServicePropertyPredefinition(x)).ToArray();
         }
     }
 }

@@ -10,7 +10,7 @@ namespace sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI
     {
         internal ServiceUniquePredefinition(UniquePredefinition myUniquePredefinition)
         {
-            this.Properties = myUniquePredefinition.Properties.ToList();
+            this.Properties = myUniquePredefinition.Properties.ToArray();
         }
     }
 }
