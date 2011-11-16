@@ -3366,6 +3366,7 @@ namespace sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="ServiceVertexView", Namespace="http://www.sones.com")]
     [System.SerializableAttribute()]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI.ServicePropertyMultiplicity))]
     public partial class ServiceVertexView : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
         [System.NonSerializedAttribute()]
