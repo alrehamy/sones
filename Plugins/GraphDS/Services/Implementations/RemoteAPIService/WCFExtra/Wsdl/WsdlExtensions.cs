@@ -9,7 +9,7 @@ using WCFExtras.Utils;
 
 namespace WCFExtras.Wsdl
 {
-    public class WsdlExtensions : IEndpointBehavior, IWsdlExportExtension
+    public sealed class WsdlExtensions : IEndpointBehavior, IWsdlExportExtension
     {
         #region EndpointBehavior - Not used
         void IEndpointBehavior.AddBindingParameters(ServiceEndpoint endpoint, System.ServiceModel.Channels.BindingParameterCollection bindingParameters)
@@ -32,7 +32,7 @@ namespace WCFExtras.Wsdl
 
         public bool SingleFile { get; set; }
 
-        internal WsdlExtensions(WsdlExtensionsConfig config)
+        public WsdlExtensions(WsdlExtensionsConfig config)
         {
             this.Location = config.Location;
             this.SingleFile = config.SingleFile;

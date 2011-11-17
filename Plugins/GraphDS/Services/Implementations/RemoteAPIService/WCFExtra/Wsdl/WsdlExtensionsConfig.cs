@@ -8,7 +8,7 @@ using System.Configuration;
 
 namespace WCFExtras.Wsdl
 {
-    class WsdlExtensionsConfig : BehaviorExtensionElement
+    public sealed class WsdlExtensionsConfig : BehaviorExtensionElement
     {
         public override Type BehaviorType
         {
