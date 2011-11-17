@@ -14,7 +14,6 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyCopyright("Copyright © sones GmbH 2007-2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: InternalsVisibleTo("TestSonesGQL", AllInternalsVisible = true)]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
@@ -39,3 +38,6 @@ using System.Runtime.CompilerServices;
 
 [assembly: AssemblyVersion("2.0.0.0")]
 [assembly: AssemblyFileVersion("2.0.0.0")]
+
+//needed for a strong name
+[assembly: AssemblyKeyFileAttribute(@"..\..\..\Keys\coshKey.snk")]

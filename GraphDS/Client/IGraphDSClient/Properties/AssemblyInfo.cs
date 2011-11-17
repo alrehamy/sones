@@ -37,3 +37,6 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+
+//needed for a strong name
+[assembly: AssemblyKeyFileAttribute(@"..\..\..\..\..\Keys\coshKey.snk")]
