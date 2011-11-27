@@ -51,10 +51,6 @@
       <Project>{9DA95789-BE43-47EB-A2F7-9091FFF8D571}</Project>
       <Name>TagExample</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Dijkstra\Dijkstra.csproj">
-      <Project>{422CF815-6A94-424B-AD6B-DC41A88C6E61}</Project>
-      <Name>Dijkstra</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\..\..\..\..\GraphDB\IGraphDB\IGraphDB.csproj">
       <Project>{5A691EE2-96EE-4F5F-858E-6A17088CE7A1}</Project>
       <Name>IGraphDB</Name>

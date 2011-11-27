@@ -13,9 +13,9 @@ namespace sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI
             this.NewTypeName = myRequestAlterEdgeType.AlteredTypeName;
             this.Comment = myRequestAlterEdgeType.AlteredComment;
             this.ToBeAddedProperties = (myRequestAlterEdgeType.ToBeAddedProperties == null)
-                ? null : myRequestAlterEdgeType.ToBeAddedProperties.Select(x => new ServicePropertyPredefinition(x)).ToList();
+                ? null : myRequestAlterEdgeType.ToBeAddedProperties.Select(x => new ServicePropertyPredefinition(x)).ToArray();
             this.ToBeRemovedProperties = (myRequestAlterEdgeType.ToBeRemovedProperties == null)
-                ? null : myRequestAlterEdgeType.ToBeRemovedProperties.ToList();
+                ? null : myRequestAlterEdgeType.ToBeRemovedProperties.ToArray();
             this.ToBeRenamedProperties = myRequestAlterEdgeType.ToBeRenamedProperties;
         }
     }

@@ -10,7 +10,7 @@ namespace sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI
     {
         public ServiceHyperEdgeInstance(IHyperEdge myEdge) : base(myEdge)
         {
-            SingleEdges = myEdge.GetAllEdges().Select(x => new ServiceSingleEdgeInstance(x)).ToList();
+            SingleEdges = myEdge.GetAllEdges().Select(x => new ServiceSingleEdgeInstance(x)).ToArray();
         }
     }
 }

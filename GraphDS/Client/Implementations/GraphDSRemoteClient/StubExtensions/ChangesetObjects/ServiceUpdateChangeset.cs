@@ -12,7 +12,7 @@ namespace sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI
         {
             this.VertexTypeName = myRequestUpdate.GetVerticesRequest.VertexTypeName;
             this.VertexTypeID = myRequestUpdate.GetVerticesRequest.VertexTypeID;
-            this.VertexIDs = myRequestUpdate.GetVerticesRequest.VertexIDs.ToList();
+            this.VertexIDs = myRequestUpdate.GetVerticesRequest.VertexIDs.ToArray();
             this.Expression = (myRequestUpdate.GetVerticesRequest.Expression == null) ? null : ConvertHelper.ToServiceExpression(myRequestUpdate.GetVerticesRequest.Expression);
 
             this.Comment = myRequestUpdate.UpdatedComment;
@@ -20,16 +20,16 @@ namespace sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI
 
             if (myRequestUpdate.AddedElementsToCollectionProperties != null)
             {
-                this.AddedElementsToCollectionProperties = new Dictionary<string, List<object>>();
+                this.AddedElementsToCollectionProperties = new Dictionary<string, object[]>();
                 foreach (var item in myRequestUpdate.AddedElementsToCollectionProperties)
-                    this.AddedElementsToCollectionProperties.Add(item.Key, item.Value.Select(x => (object)x).ToList());
+                    this.AddedElementsToCollectionProperties.Add(item.Key, item.Value.Select(x => (object)x).ToArray());
             }
 
             if (myRequestUpdate.RemovedElementsFromCollectionProperties != null)
             {
-                this.RemovedElementsFromCollectionProperties = new Dictionary<string, List<object>>();
+                this.RemovedElementsFromCollectionProperties = new Dictionary<string, object[]>();
                 foreach (var item in myRequestUpdate.RemovedElementsFromCollectionProperties)
-                    this.RemovedElementsFromCollectionProperties.Add(item.Key, item.Value.Select(x => (object)x).ToList());
+                    this.RemovedElementsFromCollectionProperties.Add(item.Key, item.Value.Select(x => (object)x).ToArray());
             }
 
             if (myRequestUpdate.AddedElementsToCollectionEdges != null)
@@ -53,9 +53,9 @@ namespace sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI
                 ? null : myRequestUpdate.UpdatedStructuredProperties.ToDictionary(k => k.Key, v => (object)v.Value);
 
             this.UpdatedOutgoingEdges = (myRequestUpdate.UpdateOutgoingEdges == null)
-                ? null : myRequestUpdate.UpdateOutgoingEdges.Select(x => new ServiceEdgePredefinition(x)).ToList();
+                ? null : myRequestUpdate.UpdateOutgoingEdges.Select(x => new ServiceEdgePredefinition(x)).ToArray();
             this.UpdateOutgoingEdgesProperties = (myRequestUpdate.UpdateOutgoingEdgesProperties == null)
-                ? null : myRequestUpdate.UpdateOutgoingEdgesProperties.Select(x => new ServiceSingleEdgeUpdateDefinition(x)).ToList();
+                ? null : myRequestUpdate.UpdateOutgoingEdgesProperties.Select(x => new ServiceSingleEdgeUpdateDefinition(x)).ToArray();
 
             this.UpdatedUnknownProperties = (myRequestUpdate.UpdatedUnknownProperties == null)
                 ? null : myRequestUpdate.UpdatedUnknownProperties.ToDictionary(k => k.Key, v => v.Value);

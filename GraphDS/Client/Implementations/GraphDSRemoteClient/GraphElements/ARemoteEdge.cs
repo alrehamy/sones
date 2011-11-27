@@ -100,7 +100,7 @@ namespace sones.GraphDS.GraphDSRemoteClient.GraphElements
 
         public IEnumerable<UnstructuredPropertyContainer> GetAllUnstructuredProperties(PropertyHyperGraphFilter.GraphElementUnStructuredPropertyFilter myFilter = null)
         {
-            return _ServiceToken.EdgeService.GetAllUnstructuredPropertiesByEdgeInstance(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, ConvertHelper.ToServiceEdgeInstance(this));
+            return _ServiceToken.EdgeService.GetAllUnstructuredPropertiesByEdgeInstance(_ServiceToken.SecurityToken, _ServiceToken.TransactionToken, ConvertHelper.ToServiceEdgeInstance(this)).Select(_ => new UnstructuredPropertyContainer { PropertyName = _.PropertyName, Property = _.Property}) ;
         }
 
         public string GetUnstructuredPropertyAsString(string myPropertyName)
