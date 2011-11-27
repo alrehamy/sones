@@ -179,17 +179,6 @@ namespace sones.GraphDS.Services.RemoteAPIService
             _ServiceHost = new ServiceHost(ContractInstance, this.URI);
             _ServiceHost.Description.Namespace = Namespace;
 
-
-            #region Global Service Interface
-
-            //ContractDescription RPCServiceContract = ContractDescription.GetContract(typeof(IRPCServiceContract));
-            //RPCServiceContract.Namespace = Namespace;
-            //ServiceEndpoint RPCServiceService = new ServiceEndpoint(RPCServiceContract, BasicBinding, new EndpointAddress(this.URI.AbsoluteUri));
-            //_ServiceHost.AddServiceEndpoint(RPCServiceService);
-
-            #endregion
-
-
             #region Streamed Contract
 
             _ServiceHost.AddServiceEndpoint(typeof(IStreamedService), StreamedBinding, this.URI.ToString() + "/streamed");

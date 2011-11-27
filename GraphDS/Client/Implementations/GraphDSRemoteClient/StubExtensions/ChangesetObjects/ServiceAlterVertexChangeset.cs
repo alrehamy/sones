@@ -12,18 +12,29 @@ namespace sones.GraphDS.GraphDSRemoteClient.sonesGraphDSRemoteAPI
         {
             this.NewTypeName = myRequestAlterVertexType.AlteredTypeName;
             this.Comment = myRequestAlterVertexType.AlteredComment;
-            this.ToBeAddedProperties = myRequestAlterVertexType.ToBeAddedProperties.Select(x => new ServicePropertyPredefinition(x)).ToArray();
-            this.ToBeAddedIncomingEdges = myRequestAlterVertexType.ToBeAddedIncomingEdges.Select(x => new ServiceIncomingEdgePredefinition(x)).ToArray();
-            this.ToBeAddedOutgoingEdges = myRequestAlterVertexType.ToBeAddedOutgoingEdges.Select(x => new ServiceOutgoingEdgePredefinition(x)).ToArray();
-            this.ToBeAddedIndices = myRequestAlterVertexType.ToBeAddedIndices.Select(x => new ServiceIndexPredefinition(x)).ToArray();
-            this.ToBeAddedUniques = myRequestAlterVertexType.ToBeAddedUniques.Select(x => new ServiceUniquePredefinition(x)).ToArray();
-            this.ToBeAddedMandatories = myRequestAlterVertexType.ToBeAddedMandatories.Select(x => new ServiceMandatoryPredefinition(x)).ToArray();
-            this.ToBeRemovedProperties = myRequestAlterVertexType.ToBeRemovedProperties.ToArray();
-            this.ToBeRemovedIncomingEdges = myRequestAlterVertexType.ToBeRemovedIncomingEdges.ToArray();
-            this.ToBeRemovedOutgoingEdges = myRequestAlterVertexType.ToBeRemovedOutgoingEdges.ToArray();
+            this.ToBeAddedProperties = (myRequestAlterVertexType.ToBeAddedProperties == null)
+                ? null : myRequestAlterVertexType.ToBeAddedProperties.Select(x => new ServicePropertyPredefinition(x)).ToList();
+            this.ToBeAddedIncomingEdges = (myRequestAlterVertexType.ToBeAddedIncomingEdges == null)
+                ? null : myRequestAlterVertexType.ToBeAddedIncomingEdges.Select(x => new ServiceIncomingEdgePredefinition(x)).ToList();
+            this.ToBeAddedOutgoingEdges = (myRequestAlterVertexType.ToBeAddedOutgoingEdges == null)
+                ? null : myRequestAlterVertexType.ToBeAddedOutgoingEdges.Select(x => new ServiceOutgoingEdgePredefinition(x)).ToList();
+            this.ToBeAddedIndices = (myRequestAlterVertexType.ToBeAddedIndices == null)
+                ? null : myRequestAlterVertexType.ToBeAddedIndices.Select(x => new ServiceIndexPredefinition(x)).ToList();
+            this.ToBeAddedUniques = (myRequestAlterVertexType.ToBeAddedUniques == null)
+                ? null : myRequestAlterVertexType.ToBeAddedUniques.Select(x => new ServiceUniquePredefinition(x)).ToList();
+            this.ToBeAddedMandatories = (myRequestAlterVertexType.ToBeAddedMandatories == null)
+                ? null : myRequestAlterVertexType.ToBeAddedMandatories.Select(x => new ServiceMandatoryPredefinition(x)).ToList();
+            this.ToBeRemovedProperties = (myRequestAlterVertexType.ToBeRemovedProperties == null)
+                ? null : myRequestAlterVertexType.ToBeRemovedProperties.ToList();
+            this.ToBeRemovedIncomingEdges = (myRequestAlterVertexType.ToBeRemovedIncomingEdges == null)
+                ? null : myRequestAlterVertexType.ToBeRemovedIncomingEdges.ToList();
+            this.ToBeRemovedOutgoingEdges = (myRequestAlterVertexType.ToBeRemovedOutgoingEdges == null)
+                ? null : myRequestAlterVertexType.ToBeRemovedOutgoingEdges.ToList();
             this.ToBeRemovedIndices = myRequestAlterVertexType.ToBeRemovedIndices;
-            this.ToBeRemovedUniques = myRequestAlterVertexType.ToBeRemovedUniques.ToArray();
-            this.ToBeRemovedMandatories = myRequestAlterVertexType.ToBeRemovedMandatories.ToArray();
+            this.ToBeRemovedUniques = (myRequestAlterVertexType.ToBeRemovedUniques == null)
+                ? null : myRequestAlterVertexType.ToBeRemovedUniques.ToList();
+            this.ToBeRemovedMandatories = (myRequestAlterVertexType.ToBeRemovedMandatories == null)
+                ? null : myRequestAlterVertexType.ToBeRemovedMandatories.ToList();
             this.ToBeRenamedProperties = myRequestAlterVertexType.ToBeRenamedProperties;
         }
     }

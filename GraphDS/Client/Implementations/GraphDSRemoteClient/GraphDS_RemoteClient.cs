@@ -322,8 +322,6 @@ namespace sones.GraphDS.GraphDSRemoteClient
             var svcVertices = _GraphDSService.Update(
                 mySecurityToken,
                 myTransactionID,
-                new ServiceVertexType(myRequestUpdate.GetVerticesRequest.VertexTypeName),
-                myRequestUpdate.GetVerticesRequest.VertexIDs.ToArray(),
                 new ServiceUpdateChangeset(myRequestUpdate));
             var vertices = svcVertices.Select(x => (IVertex)new RemoteVertex(x, this));
             RunningTime.Stop();
@@ -387,6 +385,10 @@ namespace sones.GraphDS.GraphDSRemoteClient
             if (myRequestGetVertices.VertexTypeName != null)
             {
                 svcVertices = _GraphDSService.GetVerticesByType(mySecurityToken, myTransactionID, new ServiceVertexType(myRequestGetVertices.VertexTypeName));
+            }
+            else if (myRequestGetVertices.VertexTypeID != null)
+            {
+                svcVertices = _GraphDSService.GetVerticesByType(mySecurityToken, myTransactionID, new ServiceVertexType(myRequestGetVertices.VertexTypeID));
             }
             else
             {
