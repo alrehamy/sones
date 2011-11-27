@@ -40,4 +40,4 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyFileVersion("2.0.0.0")]
 
 //needed for a strong name
-[assembly: AssemblyKeyFileAttribute(@"..\..\..\Keys\coshKey.snk")]
+[assembly: AssemblyKeyFileAttribute(@"../../../Keys/coshKey.snk")]

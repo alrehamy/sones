@@ -37,4 +37,4 @@ using System.Runtime.InteropServices;
 
 
 //needed for a strong name
-[assembly: AssemblyKeyFileAttribute(@"..\..\..\..\..\..\Keys\coshKey.snk")]
+[assembly: AssemblyKeyFileAttribute(@"../../../../../../Keys/coshKey.snk")]
