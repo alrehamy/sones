@@ -36,11 +36,14 @@ using sones.Library.DataStructures;
 using sones.Plugins.SonesGQL.DBImport;
 using System.Threading.Tasks;
 using System.Threading;
+using sones.Library.LanguageExtensions;
 
 namespace sones.Plugins.SonesGQL
 {
     public sealed class GraphDBImport_GQL : IGraphDBImport
     {
+        private long _numberOfStatements = 0;
+
         #region constructor
 
         public GraphDBImport_GQL()
@@ -88,9 +91,9 @@ namespace sones.Plugins.SonesGQL
 
                 #region Start import using the AGraphDBImport implementation and return the result
 
-                var result = Import(stream, myGraphDB, myGraphQL, mySecurityToken, myTransactionToken, myParallelTasks, myComments, myOffset, myLimit, myVerbosityType);
+                Import(stream, myGraphDB, myGraphQL, mySecurityToken, myTransactionToken, myParallelTasks, myComments, myOffset, myLimit, myVerbosityType);
 
-                return AggregateListOfListOfVertices(result);
+                return new VertexView(new Dictionary<string, object> { { "Number of import statements:", _numberOfStatements } }, null).SingleEnumerable();
 
                 #endregion
             }
@@ -105,7 +108,7 @@ namespace sones.Plugins.SonesGQL
             #endregion
         }
 
-        private IEnumerable<IEnumerable<IVertexView>> Import(Stream myInputStream, IGraphDB myIGraphDB, IGraphQL myGraphQL, SecurityToken mySecurityToken, Int64 myTransactionToken, UInt32 myParallelTasks = 1U, IEnumerable<string> myComments = null, ulong? myOffset = null, ulong? myLimit = null, VerbosityTypes myVerbosityType = VerbosityTypes.Silent)
+        private void Import(Stream myInputStream, IGraphDB myIGraphDB, IGraphQL myGraphQL, SecurityToken mySecurityToken, Int64 myTransactionToken, UInt32 myParallelTasks = 1U, IEnumerable<string> myComments = null, ulong? myOffset = null, ulong? myLimit = null, VerbosityTypes myVerbosityType = VerbosityTypes.Silent)
         {
             var lines = ReadLinesFromStream(myInputStream);
 
@@ -126,14 +129,13 @@ namespace sones.Plugins.SonesGQL
 
             #region Import queries
 
-            IQueryResult queryResult;
             if (myParallelTasks > 1)
             {
-                return ExecuteAsParallel(lines, myGraphQL, mySecurityToken, myTransactionToken, myVerbosityType, myParallelTasks, myComments);
+                ExecuteAsParallel(lines, myGraphQL, mySecurityToken, myTransactionToken, myVerbosityType, myParallelTasks, myComments);
             }
             else
             {
-                return ExecuteAsSingleThread(lines, myGraphQL, mySecurityToken, myTransactionToken, myVerbosityType, myComments);
+                ExecuteAsSingleThread(lines, myGraphQL, mySecurityToken, myTransactionToken, myVerbosityType, myComments);
             }
 
             #endregion
@@ -141,7 +143,7 @@ namespace sones.Plugins.SonesGQL
 
 
 
-        private IEnumerable<IEnumerable<IVertexView>> ExecuteAsParallel(IEnumerable<String> myLines,
+        private void ExecuteAsParallel(IEnumerable<String> myLines,
                                                 IGraphQL myIGraphQL,
                                                 SecurityToken mySecurityToken,
                                                 Int64 myTransactionToken,
@@ -152,7 +154,6 @@ namespace sones.Plugins.SonesGQL
             #region data
             Int64 numberOfLine = 0;
             var query = String.Empty;
-            var aggregatedResults = new List<IEnumerable<IVertexView>>();
             #endregion
 
             #region Create parallel options
@@ -173,16 +174,9 @@ namespace sones.Plugins.SonesGQL
                     Interlocked.Increment(ref numberOfLine);
 
                     var qresult = ExecuteQuery(line, myIGraphQL, mySecurityToken, myTransactionToken);
+                    Interlocked.Increment(ref _numberOfStatements);
 
                     #region VerbosityTypes.Full: Add result
-
-                    if (myVerbosityType == VerbosityTypes.Full)
-                    {
-                        lock (aggregatedResults)
-                        {
-                            aggregatedResults.Add(qresult.Vertices);
-                        }
-                    }
 
                     #endregion
 
@@ -200,11 +194,10 @@ namespace sones.Plugins.SonesGQL
                 }
             });
 
-            return aggregatedResults;
             #endregion
         }
 
-        private IEnumerable<IEnumerable<IVertexView>> ExecuteAsSingleThread(IEnumerable<String> myLines,
+        private void ExecuteAsSingleThread(IEnumerable<String> myLines,
                                                     IGraphQL myIGraphQL,
                                                     SecurityToken mySecurityToken,
                                                     Int64 myTransactionToken,
@@ -215,7 +208,6 @@ namespace sones.Plugins.SonesGQL
             #region data
 
             Int64 numberOfLine = 0;
-            var aggregatedResults = new List<IEnumerable<IVertexView>>();
 
             #endregion
 
@@ -240,6 +232,7 @@ namespace sones.Plugins.SonesGQL
                 #region execute query
 
                 var tempResult = myIGraphQL.Query(mySecurityToken, myTransactionToken, _Line);
+                Interlocked.Increment(ref _numberOfStatements);
 
                 #endregion
 
@@ -259,34 +252,12 @@ namespace sones.Plugins.SonesGQL
                     }
                 }
 
-                aggregatedResults.Add(tempResult.Vertices);
-
                 #endregion
             }
 
 
-            return aggregatedResults;
-
             #endregion
 
-        }
-
-        /// <summary>
-        /// Aggregates different enumerations of readout objects
-        /// </summary>
-        /// <param name="myListOfListOfVertices"></param>
-        /// <returns></returns>
-        private IEnumerable<IVertexView> AggregateListOfListOfVertices(IEnumerable<IEnumerable<IVertexView>> myListOfListOfVertices)
-        {
-            foreach (var _ListOfVertices in myListOfListOfVertices)
-            {
-                foreach (var _Vertex in _ListOfVertices)
-                {
-                    yield return _Vertex;
-                }
-            }
-
-            yield break;
         }
 
         private Boolean IsComment(String myQuery, IEnumerable<String> comments = null)
