@@ -37,17 +37,31 @@ using sones.Plugins.SonesGQL.DBImport;
 using System.Threading.Tasks;
 using System.Threading;
 using sones.Library.LanguageExtensions;
+using sones.Library.SlimLogFramework;
+using sones.Library.SlimLogFramework.Logger;
 
 namespace sones.Plugins.SonesGQL
 {
     public sealed class GraphDBImport_GQL : IGraphDBImport
     {
         private long _numberOfStatements = 0;
+		
+		 /// <summary>
+		/// The ILogger instance, that can be used to log information.
+		/// </summary>
+		private ILogger _logger;
 
+		/// <summary>
+		/// The path to the log location.
+		/// </summary>
+		private string _logpath;
+		
         #region constructor
 
-        public GraphDBImport_GQL()
-        { }
+        public GraphDBImport_GQL ()
+		{ 
+			_logpath = Path.Combine (".gqlImport_" + Guid.NewGuid().ToString() + ".log");
+		}
 
         #endregion
 
@@ -71,6 +85,17 @@ namespace sones.Plugins.SonesGQL
 
             try
             {
+				//if verbositiy is silent, we do not configure the logger, so it is an empty logger.
+				if (myVerbosityType != VerbosityTypes.Silent) {
+					Level logLevel = (myVerbosityType == VerbosityTypes.Full)
+                        ? Level.FINE
+                        : Level.INFO;
+					LogManager.Instance.ConfigureLogger ("GqlImport", new FileLogger (_logpath, logLevel));
+				}
+
+				//store some arguments as fields, because there is at most one execution at any time.
+				_logger = LogManager.Instance.GetLogger ("GqlImport");
+				
                 #region file
                 if (myLocation.ToLower().StartsWith(@"file:\\"))
                 {
@@ -108,157 +133,105 @@ namespace sones.Plugins.SonesGQL
             #endregion
         }
 
-        private void Import(Stream myInputStream, IGraphDB myIGraphDB, IGraphQL myGraphQL, SecurityToken mySecurityToken, Int64 myTransactionToken, UInt32 myParallelTasks = 1U, IEnumerable<string> myComments = null, ulong? myOffset = null, ulong? myLimit = null, VerbosityTypes myVerbosityType = VerbosityTypes.Silent)
-        {
-            var lines = ReadLinesFromStream(myInputStream);
+        private void Import (Stream myInputStream, IGraphDB myIGraphDB, IGraphQL myGraphQL, SecurityToken mySecurityToken, Int64 myTransactionToken, UInt32 myParallelTasks = 1U, IEnumerable<string> myComments = null, ulong? myOffset = null, ulong? myLimit = null, VerbosityTypes myVerbosityType = VerbosityTypes.Silent)
+		{
+			var lines = ReadLinesFromStream (myInputStream);
 
             #region Evaluate Limit and Offset
 
-            if (myOffset != null)
-            {
-                if (lines != null)
-                    lines = lines.Skip<String>(Convert.ToInt32(myOffset.Value));
-            }
-            if (myLimit != null)
-            {
-                if (lines != null)
-                    lines = lines.Take<String>(Convert.ToInt32(myLimit.Value));
-            }
+			if (myOffset != null) {
+				if (lines != null)
+					lines = lines.Skip<String> (Convert.ToInt32 (myOffset.Value));
+			}
+			if (myLimit != null) {
+				if (lines != null)
+					lines = lines.Take<String> (Convert.ToInt32 (myLimit.Value));
+			}
 
             #endregion
 
             #region Import queries
 
-            if (myParallelTasks > 1)
-            {
-                ExecuteAsParallel(lines, myGraphQL, mySecurityToken, myTransactionToken, myVerbosityType, myParallelTasks, myComments);
-            }
-            else
-            {
-                ExecuteAsSingleThread(lines, myGraphQL, mySecurityToken, myTransactionToken, myVerbosityType, myComments);
-            }
+			ExecuteAsSingleThread (lines, myGraphQL, mySecurityToken, myTransactionToken, myVerbosityType, myComments);
 
             #endregion
         }
 
-
-
-        private void ExecuteAsParallel(IEnumerable<String> myLines,
-                                                IGraphQL myIGraphQL,
-                                                SecurityToken mySecurityToken,
-                                                Int64 myTransactionToken,
-                                                VerbosityTypes myVerbosityType,
-                                                UInt32 myParallelTasks = 1U,
-                                                IEnumerable<String> comments = null)
-        {
-            #region data
-            Int64 numberOfLine = 0;
-            var query = String.Empty;
-            #endregion
-
-            #region Create parallel options
-
-            var parallelOptions = new ParallelOptions()
-            {
-                MaxDegreeOfParallelism = (int)myParallelTasks
-            };
-
-            #endregion
-
-            #region check lines and execute query
-
-            Parallel.ForEach(myLines, parallelOptions, (line, state) =>
-            {
-                if (!IsComment(line, comments))
-                {
-                    Interlocked.Increment(ref numberOfLine);
-
-                    var qresult = ExecuteQuery(line, myIGraphQL, mySecurityToken, myTransactionToken);
-                    Interlocked.Increment(ref _numberOfStatements);
-
-                    #region VerbosityTypes.Full: Add result
-
-                    #endregion
-
-                    #region !VerbosityTypes.Silent: Add errors and break execution
-
-                    if (qresult.TypeOfResult != ResultType.Successful && myVerbosityType != VerbosityTypes.Silent)
-                    {
-                        if (qresult.Error != null)
-                            throw qresult.Error;
-                        else
-                            throw new ImportFailedException(new UnknownException());
-                    }
-
-                    #endregion
-                }
-            });
-
-            #endregion
-        }
-
-        private void ExecuteAsSingleThread(IEnumerable<String> myLines,
+        private void ExecuteAsSingleThread (IEnumerable<String> myLines,
                                                     IGraphQL myIGraphQL,
                                                     SecurityToken mySecurityToken,
                                                     Int64 myTransactionToken,
                                                     VerbosityTypes myVerbosityType,
                                                     IEnumerable<String> comments = null)
-        {
-
+		{
+			
+			_logger.Log (Level.INFO, "Started GQL import.");
+			
             #region data
 
-            Int64 numberOfLine = 0;
+			Int64 numberOfLine = 0;
 
             #endregion
 
             #region check lines and execute query
+			
+			Stopwatch sw = new Stopwatch ();
+			
+			foreach (var _Line in myLines) {
+				numberOfLine++;
 
-            foreach (var _Line in myLines)
-            {
-                numberOfLine++;
-
-                if (String.IsNullOrWhiteSpace(_Line))
-                {
-                    continue;
-                }
+				if (String.IsNullOrWhiteSpace (_Line)) {
+					continue;
+				}
 
                 #region Skip comments
 
-                if (IsComment(_Line, comments))
-                    continue;
+				if (IsComment (_Line, comments))
+					continue;
 
                 #endregion
 
                 #region execute query
-
-                var tempResult = myIGraphQL.Query(mySecurityToken, myTransactionToken, _Line);
-                Interlocked.Increment(ref _numberOfStatements);
-
+				_logger.Log (Level.INFO, String.Format ("Executing query {0}: {1}", _numberOfStatements, _Line));
+				
+				sw.Reset ();
+				sw.Start ();
+				
+				var tempResult = myIGraphQL.Query (mySecurityToken, myTransactionToken, _Line);
+				Interlocked.Increment (ref _numberOfStatements);
+				
+				sw.Stop ();
+				
+				_logger.Log (Level.INFO, String.Format ("Took {0}ms.", sw.Elapsed.TotalMilliseconds));
+				
                 #endregion
 
                 #region Add errors and break execution
 
-                if (tempResult.TypeOfResult == ResultType.Failed)
-                {
-                    if (tempResult.Error.Message.Equals("Mal-formed  string literal - cannot find termination symbol."))
-                        Debug.WriteLine("Query at line [" + numberOfLine + "] [" + _Line + "] failed with " + tempResult.Error.ToString() + " add next line...");
-
-                    if (myVerbosityType == VerbosityTypes.Errors)
-                    {
-                        if (tempResult.Error != null)
-                            throw tempResult.Error;
-                        else
-                            throw new ImportFailedException(new UnknownException());
-                    }
-                }
+				if (tempResult.TypeOfResult == ResultType.Failed) {
+					if (tempResult.Error.Message.Equals ("Mal-formed  string literal - cannot find termination symbol.")) {
+						
+						string error = "Query at line [" + numberOfLine + "] [" + _Line + "] failed with " + tempResult.Error.ToString () + " add next line...";
+						Debug.WriteLine (error);
+						_logger.Log (Level.WARNING, error);
+					}
+					if (myVerbosityType == VerbosityTypes.Errors) {
+						if (tempResult.Error != null) {
+							_logger.Log (Level.SEVERE, tempResult.Error.ToString ());
+						} else {
+							_logger.Log (Level.SEVERE, "Import failed because of unknown exception");
+						}
+					}
+				}
 
                 #endregion
-            }
+			}
 
 
             #endregion
-
-        }
+			
+			_logger.Log (Level.INFO, String.Format ("Finished GQL import and executed {0} statements", _numberOfStatements));
+		}
 
         private Boolean IsComment(String myQuery, IEnumerable<String> comments = null)
         {
